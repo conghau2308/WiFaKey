@@ -1,0 +1,17 @@
+numpy==1.26.4
+tensorflow==2.10.1
+protobuf==3.19.6
+onnxruntime-gpu>=1.14.0,<2
+insightface==0.7.3
+opencv-python-headless==4.9.0.80
+fastapi==0.95.2
+uvicorn==0.22.0
+transformers==4.37.2
+huggingface-hub>=0.19.3,<1.0
+pydantic==1.10.11
+omegaconf==2.3.0
+fvcore
+galois>=0.3.8
+matplotlib>=3.5
+tqdm>=4.65
+

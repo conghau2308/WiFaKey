@@ -1,0 +1,16 @@
+venv/
+.venv-native/
+
+__pycache__/
+
+pretrained_models/
+
+embeddings/
+
+feature_extractor/model
+
+exports/
+
+build/
+dist/
+

@@ -1,0 +1,24 @@
+# Native Windows Authenticator — ONNX CPU
+# Face detection: InsightFace buffalo_l (det_10g.onnx) — khớp pipeline gốc wifakey_252
+# Embedding: adaface_ir101.onnx | Liveness: anti-spoofing.onnx | LDPC: neural_ms_decoder.onnx
+
+# Core numerical
+numpy==1.26.4
+
+# ONNX inference — CPU only
+onnxruntime>=1.16.3,<2.0
+
+# Camera capture + image preprocessing
+opencv-python==4.9.0.80
+
+# Face alignment — SimilarityTransform 5 keypoints
+scikit-image>=0.21.0
+
+# Camera overlay UI — frameless window, live preview, stays-on-top (LGPL)
+PySide6>=6.6.0
+
+# IPC với browser — WebSocket server localhost
+websockets>=11.0
+
+# HTTP calls đến IdP (POST enroll/verify)
+requests>=2.31.0

@@ -1,0 +1,130 @@
+{
+  "config": {
+    "dataset_root": "G:\\archive_3\\Selfies ID Images dataset",
+    "image_glob": "*.jpg",
+    "max_users": 0,
+    "max_images": 0,
+    "inter_pairs": 1000,
+    "seed": 42,
+    "handlers": [
+      "neural_ms",
+      "bch"
+    ]
+  },
+  "stats": {
+    "users_with_embeddings": 29,
+    "images_total": 346,
+    "extract_status_counts": {}
+  },
+  "runs": [
+    {
+      "handler": "neural_ms",
+      "n": 832,
+      "k": 160,
+      "rate": null,
+      "kappa": 0.3125,
+      "intra": {
+        "pairs": 1935,
+        "success": 1935,
+        "fail": 0,
+        "tar": 1.0
+      },
+      "inter": {
+        "pairs": 1000,
+        "false_accept": 0,
+        "far": 0.0
+      },
+      "time": {
+        "enroll_ms": {
+          "mean_ms": 2.578304335231034,
+          "p50_ms": 2.4873000002116896,
+          "p95_ms": 3.244150004320545,
+          "count": 346
+        },
+        "verify_intra_ms": {
+          "mean_ms": 33.520587441760824,
+          "p50_ms": 33.34730000642594,
+          "p95_ms": 34.68103999766754,
+          "count": 1935
+        },
+        "verify_inter_ms": {
+          "mean_ms": 33.695687300074496,
+          "p50_ms": 33.57564999896567,
+          "p95_ms": 34.76745500956895,
+          "count": 1000
+        }
+      },
+      "fail_examples": []
+    },
+    {
+      "handler": "bch",
+      "n": 1023,
+      "k": 193,
+      "rate": 0.18866080156402737,
+      "kappa": 0.3125,
+      "intra": {
+        "pairs": 1935,
+        "success": 1154,
+        "fail": 781,
+        "tar": 0.5963824289405685
+      },
+      "inter": {
+        "pairs": 1000,
+        "false_accept": 0,
+        "far": 0.0
+      },
+      "time": {
+        "enroll_ms": {
+          "mean_ms": 4.828963005132004,
+          "p50_ms": 4.83640000311425,
+          "p95_ms": 5.400199996074662,
+          "count": 346
+        },
+        "verify_intra_ms": {
+          "mean_ms": 48.823009044206,
+          "p50_ms": 46.10780000803061,
+          "p95_ms": 67.701169999782,
+          "count": 1935
+        },
+        "verify_inter_ms": {
+          "mean_ms": 43.005500500192284,
+          "p50_ms": 40.05855000286829,
+          "p95_ms": 64.15162000048439,
+          "count": 1000
+        }
+      },
+      "fail_examples": [
+        "intra_reject user=1 Selfie_1.jpg->Selfie_12.jpg",
+        "intra_reject user=1 Selfie_1.jpg->Selfie_3.jpg",
+        "intra_reject user=1 Selfie_1.jpg->Selfie_9.jpg",
+        "intra_reject user=1 Selfie_10.jpg->Selfie_3.jpg",
+        "intra_reject user=1 Selfie_10.jpg->Selfie_4.jpg",
+        "intra_reject user=1 Selfie_10.jpg->Selfie_6.jpg",
+        "intra_reject user=1 Selfie_10.jpg->Selfie_9.jpg",
+        "intra_reject user=1 Selfie_11.jpg->Selfie_3.jpg",
+        "intra_reject user=1 Selfie_11.jpg->Selfie_4.jpg",
+        "intra_reject user=1 Selfie_11.jpg->Selfie_9.jpg",
+        "intra_reject user=1 Selfie_12.jpg->Selfie_6.jpg",
+        "intra_reject user=1 Selfie_12.jpg->Selfie_8.jpg",
+        "intra_reject user=1 Selfie_13.jpg->Selfie_3.jpg",
+        "intra_reject user=1 Selfie_13.jpg->Selfie_5.jpg",
+        "intra_reject user=1 Selfie_13.jpg->Selfie_6.jpg",
+        "intra_reject user=1 Selfie_13.jpg->Selfie_8.jpg",
+        "intra_reject user=1 Selfie_13.jpg->Selfie_9.jpg",
+        "intra_reject user=1 Selfie_2.jpg->Selfie_3.jpg",
+        "intra_reject user=1 Selfie_2.jpg->Selfie_4.jpg",
+        "intra_reject user=1 Selfie_2.jpg->Selfie_5.jpg",
+        "intra_reject user=1 Selfie_2.jpg->Selfie_6.jpg",
+        "intra_reject user=1 Selfie_2.jpg->Selfie_7.jpg",
+        "intra_reject user=1 Selfie_2.jpg->Selfie_8.jpg",
+        "intra_reject user=1 Selfie_2.jpg->Selfie_9.jpg",
+        "intra_reject user=1 Selfie_3.jpg->Selfie_4.jpg",
+        "intra_reject user=1 Selfie_3.jpg->Selfie_6.jpg",
+        "intra_reject user=1 Selfie_3.jpg->Selfie_8.jpg",
+        "intra_reject user=1 Selfie_3.jpg->Selfie_9.jpg",
+        "intra_reject user=1 Selfie_4.jpg->Selfie_6.jpg",
+        "intra_reject user=1 Selfie_4.jpg->Selfie_8.jpg"
+      ]
+    }
+  ]
+}
