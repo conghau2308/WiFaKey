@@ -35,8 +35,8 @@ from research.modulation.v1_soft_distance_llr import SoftDistanceLLR
 from research.decoder.v0_neural_ms_original import NeuralMSOriginal
 from research.pipeline.verify_variant import verify_with_variant
 
-_CACHE_DIR = os.path.join(_PROJECT_ROOT, "data", "processed", "embeddings_cache")
-_PAIRS_DIR = os.path.join(_PROJECT_ROOT, "data", "processed", "pairs")
+_CACHE_DIR = os.path.join(_PROJECT_ROOT, "datasets", "processed", "labeled_faces_in_the_wild", "embeddings_cache")
+_PAIRS_DIR = os.path.join(_PROJECT_ROOT, "datasets", "processed", "labeled_faces_in_the_wild", "pairs")
 
 
 def _load_embedding(name: str, imagenum) -> np.ndarray:

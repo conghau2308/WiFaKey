@@ -14,4 +14,4 @@ fvcore
 galois>=0.3.8
 matplotlib>=3.5
 tqdm>=4.65
-
+torchvision>=0.15.2

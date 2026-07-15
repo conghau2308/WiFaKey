@@ -22,7 +22,8 @@ import csv
 import cv2
 import numpy as np
 
-_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+_PROJECT_ROOT = os.path.dirname(os.path.dirname(CURRENT_DIR)) # Đi lên 2 cấp
 sys.path.insert(0, _PROJECT_ROOT)
 
 from vision_module.face_processor import FaceProcessor

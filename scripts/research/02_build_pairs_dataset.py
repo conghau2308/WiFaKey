@@ -20,7 +20,7 @@ import os
 import sys
 import csv
 
-_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")) # Lên 2 cấp
 sys.path.insert(0, _PROJECT_ROOT)
 
 RAW_CSV_DIR = os.path.join(
