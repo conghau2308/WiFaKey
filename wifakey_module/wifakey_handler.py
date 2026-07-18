@@ -252,7 +252,7 @@ class WiFaKeyHandler:
         b_selected = b_masked[:self.feature_length]
         y_noisy_bits = np.logical_xor(b_selected, helper_data)
 
-        y_llr = Modulation.BPSK(y_noisy_bits).reshape((1, self.N, self.Z))
+        y_llr = Modulation.BPSK(y_noisy_bits).astype(np.float32).reshape((1, self.N, self.Z)) # ép kiểu từ int64 sang float32
         y_pred_llr = self.sess.run(self.decoder_output, feed_dict={self.xa: y_llr})
 
         decoded_codeword = (y_pred_llr > 0).astype(int).flatten()

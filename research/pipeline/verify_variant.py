@@ -32,14 +32,26 @@ def verify_with_variant(
     b_selected = b_masked[: handler.feature_length]
 
     # confidence cũng cần mask + cắt giống hệt b_full, để khớp vị trí bit
-    conf_masked = confidence[: len(mask_r)] * mask_r
-    conf_selected = conf_masked[: handler.feature_length]
+    # QUAN TRỌNG: KHÔNG nhân confidence với mask_r ở đây. Bit bị mask (mask_r=0)
+    # bị ép về 0 một cách TẤT ĐỊNH (không phụ thuộc embedding), nên y_noisy tại
+    # đó = helper_data (biết trước, đáng tin cậy TUYỆT ĐỐI) - ngược lại hoàn
+    # toàn với "confidence thấp". Để modulation tự xử lý đúng ý nghĩa này,
+    # truyền cả confidence gốc lẫn mask_r riêng biệt.
+    confidence_selected = confidence[: handler.feature_length]
+    mask_selected = mask_r[: handler.feature_length]
 
-    y_noisy_bits = np.logical_xor(b_selected, helper_data).astype(np.uint8)
+    y_noisy_bits = np.logical_xor(b_selected, helper_data)
 
-    llr = modulation(y_noisy_bits, context={"distance": conf_selected})
+    llr = modulation(
+        y_noisy_bits,
+        context={"distance": confidence_selected, "mask": mask_selected},
+    )
 
     reconstructed_key = decoder.decode(llr)
-    recon_hash = hashlib.sha256(reconstructed_key.astype(np.uint8).tobytes()).digest()
+    # KHÔNG ép kiểu uint8 ở đây - phải khớp CHÍNH XÁC cách handler.enroll() hash
+    # random_key (random_key.flatten().tobytes(), giữ nguyên dtype=int gốc, int32
+    # trên Windows). Ép sang uint8 làm đổi số byte/phần tử khi serialize, khiến
+    # hash luôn lệch dù bit-value giống hệt nhau.
+    recon_hash = hashlib.sha256(reconstructed_key.tobytes()).digest()
 
     return recon_hash == stored_key_hash, reconstructed_key

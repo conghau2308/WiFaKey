@@ -35,8 +35,18 @@ from research.modulation.v1_soft_distance_llr import SoftDistanceLLR
 from research.decoder.v0_neural_ms_original import NeuralMSOriginal
 from research.pipeline.verify_variant import verify_with_variant
 
-_CACHE_DIR = os.path.join(_PROJECT_ROOT, "datasets", "processed", "labeled_faces_in_the_wild", "embeddings_cache")
-_PAIRS_DIR = os.path.join(_PROJECT_ROOT, "datasets", "processed", "labeled_faces_in_the_wild", "pairs")
+from research.decoder.v1_neural_ms_finetuned.decoder import NeuralMSFinetuned
+
+_CACHE_DIR = os.path.join(
+    _PROJECT_ROOT,
+    "datasets",
+    "processed",
+    "labeled_faces_in_the_wild",
+    "embeddings_cache",
+)
+_PAIRS_DIR = os.path.join(
+    _PROJECT_ROOT, "datasets", "processed", "labeled_faces_in_the_wild", "pairs"
+)
 
 
 def _load_embedding(name: str, imagenum) -> np.ndarray:
@@ -155,13 +165,23 @@ def main():
     metrics_v1 = run_variant(
         handler,
         decoder,
-        SoftDistanceLLR(scale=1.0),
+        SoftDistanceLLR(scale=60.0, min_mag=0.1, max_mag=5.0),
         binarize_with_confidence,
         test_pairs,
     )
     with open(os.path.join(out_dir, "exp002_soft_llr_only.json"), "w") as f:
         json.dump(metrics_v1, f, indent=2)
     print("exp002_soft_llr_only:", metrics_v1)
+
+    decoder_finetuned = NeuralMSFinetuned(handler)
+    metrics_v2 = run_variant(
+        handler,
+        decoder_finetuned,
+        SoftDistanceLLR(scale=60.0, min_mag=0.1, max_mag=5.0, masked_mag=1.0),
+        binarize_with_confidence,
+        test_pairs,
+    )
+    print("exp003_soft_llr_finetuned:", metrics_v2)
 
     print("\n=== So sánh ===")
     print(f"FRR: baseline={metrics_v0['FRR']:.4f}  soft_llr={metrics_v1['FRR']:.4f}")
