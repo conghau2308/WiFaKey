@@ -46,12 +46,8 @@ ORIGINAL_WEIGHTS_PATH = os.path.join(
 ORIGINAL_BIASES_PATH = os.path.join(
     _PROJECT_ROOT, "wifakey_module", "data", "Biases_Var_MS"
 )
-OUTPUT_WEIGHTS_PATH = os.path.join(
-    os.path.dirname(__file__), "weights", "Weights_Var_MS_finetuned"
-)
-OUTPUT_BIASES_PATH = os.path.join(
-    os.path.dirname(__file__), "weights", "Biases_Var_MS_finetuned"
-)
+OUTPUT_WEIGHTS_PATH = "/content/drive/MyDrive/WiFaKey_finetuned/Weights_Var_MS_finetuned"
+OUTPUT_BIASES_PATH = "/content/drive/MyDrive/WiFaKey_finetuned/Biases_Var_MS_finetuned"
 
 CACHE_DIR = os.path.join(
     _PROJECT_ROOT,
