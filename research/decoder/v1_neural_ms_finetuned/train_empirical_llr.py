@@ -95,11 +95,11 @@ ACCUM_STEPS = 4  # GRADIENT ACCUMULATION: tich luy grad qua 4 micro-batch (4 mau
 # kich hoat early-stop (PATIENCE) chi vi nhieu, khong phai vi
 # decoder da toi uu that su.
 N_EPOCHS = 100
-PATIENCE = 20  # tang tu 8 -> 20: val chi 132 mau (do phan giai ~0.0076/mau),
+PATIENCE = 10  # tang tu 8 -> 20: val chi 132 mau (do phan giai ~0.0076/mau),
 # can nhieu epoch hon de phan biet cai thien that voi nhieu
 # thong ke. Neu may cham qua, co the giam lai sau khi da thu.
 LEARNING_RATE = 1e-4
-MASKED_MAG = 1.0
+MASKED_MAG = 1.5
 MESSAGE_LOSS_WEIGHT = 8.0
 
 

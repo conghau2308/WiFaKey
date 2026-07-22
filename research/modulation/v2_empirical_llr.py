@@ -43,7 +43,7 @@ class EmpiricalLLR(BaseModulation):
     def __init__(
         self,
         lookup_path: str = _DEFAULT_LOOKUP_PATH,
-        masked_mag: float = 1.0,
+        masked_mag: float = 1.5,
     ):
         if not os.path.exists(lookup_path):
             raise FileNotFoundError(
@@ -58,7 +58,7 @@ class EmpiricalLLR(BaseModulation):
         # chứng ở v1_soft_distance_llr: y_noisy tại các vị trí này = helper_data,
         # biết trước TẤT ĐỊNH (không phụ thuộc embedding) -> margin không có ý
         # nghĩa gì ở đây, và gán độ tin cậy cao (như max_mag) từng gây FAR=39.2%
-        # trong thực nghiệm trước. masked_mag=1.0 khớp quy ước hard-BPSK.
+        # trong thực nghiệm trước. masked_mag=1.5 khớp quy ước hard-BPSK.
         self.masked_mag = masked_mag
         self.lookup_path = lookup_path
 

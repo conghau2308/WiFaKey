@@ -5,26 +5,16 @@ Train pairs: 749
 Validation pairs: 132
 ================================================================================
 
-epoch   0 (baseline): val_bit_acc=0.9916  val_exact_match=0.9545  val_loss=0.0570
-epoch   1: train_bit_acc=0.9903  val_bit_acc=0.9915  val_exact_match=0.9545  val_loss=0.0572
-epoch   2: train_bit_acc=0.9972  val_bit_acc=0.9914  val_exact_match=0.9545  val_loss=0.0572
-epoch   3: train_bit_acc=0.9926  val_bit_acc=0.9914  val_exact_match=0.9545  val_loss=0.0576
-epoch   4: train_bit_acc=0.9922  val_bit_acc=0.9914  val_exact_match=0.9545  val_loss=0.0562
-epoch   5: train_bit_acc=0.9909  val_bit_acc=0.9915  val_exact_match=0.9545  val_loss=0.0582
-epoch   6: train_bit_acc=0.9923  val_bit_acc=0.9914  val_exact_match=0.9545  val_loss=0.0579
-epoch   7: train_bit_acc=0.9953  val_bit_acc=0.9914  val_exact_match=0.9545  val_loss=0.0582
-epoch   8: train_bit_acc=0.9923  val_bit_acc=0.9914  val_exact_match=0.9545  val_loss=0.0575
-epoch   9: train_bit_acc=0.9907  val_bit_acc=0.9916  val_exact_match=0.9545  val_loss=0.0568
-epoch  10: train_bit_acc=0.9914  val_bit_acc=0.9917  val_exact_match=0.9545  val_loss=0.0578
-epoch  11: train_bit_acc=0.9924  val_bit_acc=0.9916  val_exact_match=0.9545  val_loss=0.0568
-epoch  12: train_bit_acc=0.9878  val_bit_acc=0.9916  val_exact_match=0.9545  val_loss=0.0562
-epoch  13: train_bit_acc=0.9908  val_bit_acc=0.9916  val_exact_match=0.9545  val_loss=0.0578
-epoch  14: train_bit_acc=0.9921  val_bit_acc=0.9915  val_exact_match=0.9545  val_loss=0.0584
-epoch  15: train_bit_acc=0.9899  val_bit_acc=0.9917  val_exact_match=0.9545  val_loss=0.0575
-epoch  16: train_bit_acc=0.9926  val_bit_acc=0.9919  val_exact_match=0.9545  val_loss=0.0569
-epoch  17: train_bit_acc=0.9904  val_bit_acc=0.9912  val_exact_match=0.9545  val_loss=0.0586
-epoch  18: train_bit_acc=0.9902  val_bit_acc=0.9914  val_exact_match=0.9545  val_loss=0.0576
-epoch  19: train_bit_acc=0.9895  val_bit_acc=0.9913  val_exact_match=0.9545  val_loss=0.0589
-epoch  20: train_bit_acc=0.9934  val_bit_acc=0.9915  val_exact_match=0.9545  val_loss=0.0590
+epoch   0 (baseline): val_bit_acc=0.9926  val_exact_match=0.9773  val_loss=0.0420
+epoch   1: train_bit_acc=0.9916  val_bit_acc=0.9931  val_exact_match=0.9773  val_loss=0.0391
+epoch   2: train_bit_acc=0.9979  val_bit_acc=0.9928  val_exact_match=0.9773  val_loss=0.0412
+epoch   3: train_bit_acc=0.9940  val_bit_acc=0.9928  val_exact_match=0.9773  val_loss=0.0420
+epoch   4: train_bit_acc=0.9935  val_bit_acc=0.9931  val_exact_match=0.9773  val_loss=0.0419
+epoch   5: train_bit_acc=0.9919  val_bit_acc=0.9928  val_exact_match=0.9773  val_loss=0.0403
+epoch   6: train_bit_acc=0.9937  val_bit_acc=0.9930  val_exact_match=0.9773  val_loss=0.0408
+epoch   7: train_bit_acc=0.9963  val_bit_acc=0.9929  val_exact_match=0.9773  val_loss=0.0410
+epoch   8: train_bit_acc=0.9932  val_bit_acc=0.9928  val_exact_match=0.9773  val_loss=0.0414
+epoch   9: train_bit_acc=0.9923  val_bit_acc=0.9932  val_exact_match=0.9773  val_loss=0.0386
+epoch  10: train_bit_acc=0.9928  val_bit_acc=0.9930  val_exact_match=0.9773  val_loss=0.0399
 
-Early stopping sau 20 epoch khong cai thien.
+Early stopping sau 10 epoch khong cai thien.
