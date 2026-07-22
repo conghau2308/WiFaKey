@@ -14,4 +14,4 @@ exports/
 build/
 dist/
 
-datasets/processed/**/embeddings_cache/
+**/embeddings_cache/*.npy
