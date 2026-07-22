@@ -52,7 +52,7 @@ from feature_extractor.adaface_handler import AdaFaceExtractor
 DATASET_NAME = "cplfw"
 
 # CHỈNH LẠI 2 ĐƯỜNG DẪN NÀY cho khớp với nơi bạn giải nén CPLFW
-CPLFW_RAW_IMG_DIR = os.path.join(_PROJECT_ROOT, "datasets", "raw", "cplfw", "images")
+CPLFW_RAW_IMG_DIR = os.path.join(_PROJECT_ROOT, "datasets", "raw", "cplfw", "images", "images")
 CPLFW_PAIRS_TXT = os.path.join(
     _PROJECT_ROOT, "datasets", "raw", "cplfw", "pairs_CPLFW.txt"
 )

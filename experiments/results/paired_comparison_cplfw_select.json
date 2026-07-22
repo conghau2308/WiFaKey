@@ -1,0 +1,26 @@
+{
+  "hard_bpsk": {
+    "genuine_success": 1281,
+    "genuine_total": 1694,
+    "impostor_success": 2,
+    "impostor_total": 1742,
+    "FRR": 0.24380165289256195,
+    "FAR": 0.001148105625717566
+  },
+  "soft_llr_v1": {
+    "genuine_success": 824,
+    "genuine_total": 1694,
+    "impostor_success": 0,
+    "impostor_total": 1742,
+    "FRR": 0.5135773317591499,
+    "FAR": 0.0
+  },
+  "empirical_llr": {
+    "genuine_success": 1305,
+    "genuine_total": 1694,
+    "impostor_success": 1,
+    "impostor_total": 1742,
+    "FRR": 0.22963400236127507,
+    "FAR": 0.000574052812858783
+  }
+}

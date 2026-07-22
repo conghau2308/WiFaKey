@@ -138,7 +138,6 @@ def main():
     print(
         "\nTiếp theo: chạy "
         "'python experiments/run_ab_paired.py --dataset cplfw' "
-        "(nhớ thêm 'cplfw' vào KNOWN_DATASETS trong run_ab_paired.py trước)."
     )
 
 
