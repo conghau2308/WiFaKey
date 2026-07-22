@@ -1,0 +1,12 @@
+person,image,reason
+0,1.jpg,spoof_detected
+1,0.jpg,spoof_detected
+13,0.jpg,spoof_detected
+15,0.jpg,spoof_detected
+18,1.jpg,spoof_detected
+21,0.jpg,spoof_detected
+34,0.jpg,spoof_detected
+49,0.jpg,spoof_detected
+5,0.jpg,spoof_detected
+8,0.jpg,spoof_detected
+9,0.jpg,spoof_detected

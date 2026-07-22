@@ -36,8 +36,10 @@ class NeuralMSFinetuned:
         self.Z = handler.Z
         self.key_length = handler.key_length
 
+        # build_trainable_decoder bản batch-agnostic không còn nhận
+        # batch_size (placeholder dùng shape=[None, N, Z], batch suy ra
+        # lúc feed_dict) - chỉ còn cần đường dẫn trọng số.
         tg = build_trainable_decoder(
-            batch_size=1,
             init_weights_path=FINETUNED_WEIGHTS_PATH,
             init_biases_path=FINETUNED_BIASES_PATH,
         )
@@ -50,6 +52,7 @@ class NeuralMSFinetuned:
         self.sess.run(tg["init_op"])
 
     def decode(self, llr: np.ndarray) -> np.ndarray:
+        # batch=1 vẫn hợp lệ với placeholder [None, N, Z] - không cần sửa.
         y_llr = llr.reshape((1, self.N, self.Z)).astype(np.float32)
         y_pred_llr = self.sess.run(self._decoder_output, feed_dict={self._xa: y_llr})
         decoded_codeword = (y_pred_llr > 0).astype(int).flatten()

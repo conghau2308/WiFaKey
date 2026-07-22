@@ -1,0 +1,7 @@
+[
+  {
+    "trainable_iters": 4,
+    "best_val_acc": 0.9864055171157374,
+    "best_epoch": 63
+  }
+]

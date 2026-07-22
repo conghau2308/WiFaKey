@@ -181,6 +181,8 @@ def main():
         binarize_with_confidence,
         test_pairs,
     )
+    with open(os.path.join(out_dir, "exp003_soft_llr_finetuned.json"), "w") as f:
+        json.dump(metrics_v2, f, indent=2)
     print("exp003_soft_llr_finetuned:", metrics_v2)
 
     print("\n=== So sánh ===")

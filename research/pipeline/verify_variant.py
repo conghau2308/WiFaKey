@@ -42,9 +42,19 @@ def verify_with_variant(
 
     y_noisy_bits = np.logical_xor(b_selected, helper_data)
 
+    # LƯU Ý: key "distance"/"margin" ở đây chỉ là 2 TÊN GỌI cho CÙNG MỘT mảng
+    # confidence_selected mà quantizer_fn trả về - ý nghĩa thật của mảng đó
+    # (block-shared confidence hay per-bit margin) do quantizer_fn truyền vào
+    # quyết định, không phải do verify_with_variant. Giữ cả 2 key để tương
+    # thích ngược với v0/v1 (đọc "distance") lẫn v2_empirical_llr (đọc
+    # "margin") mà không phải viết 2 nhánh code riêng.
     llr = modulation(
         y_noisy_bits,
-        context={"distance": confidence_selected, "mask": mask_selected},
+        context={
+            "distance": confidence_selected,
+            "margin": confidence_selected,
+            "mask": mask_selected,
+        },
     )
 
     reconstructed_key = decoder.decode(llr)
