@@ -76,7 +76,7 @@ _RESULTS_DIR = os.path.join(_PROJECT_ROOT, "experiments", "results")
 _LOOKUP_PATH = os.path.join(
     _PROJECT_ROOT, "experiments", "out_step3", "reliability_lookup.npz"
 )
-MASKED_MAG = 1.0
+MASKED_MAG = 1.25
 
 # Danh sách dataset hợp lệ - thêm dataset mới vào đây khi cần mở rộng
 KNOWN_DATASETS = [

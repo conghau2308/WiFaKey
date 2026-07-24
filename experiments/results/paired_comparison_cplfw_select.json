@@ -16,11 +16,11 @@
     "FAR": 0.0
   },
   "empirical_llr": {
-    "genuine_success": 1305,
+    "genuine_success": 1444,
     "genuine_total": 1694,
     "impostor_success": 1,
     "impostor_total": 1742,
-    "FRR": 0.22963400236127507,
+    "FRR": 0.14757969303423846,
     "FAR": 0.000574052812858783
   }
 }

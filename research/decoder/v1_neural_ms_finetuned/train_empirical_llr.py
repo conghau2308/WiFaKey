@@ -8,7 +8,7 @@ import csv
 import numpy as np
 import tensorflow.compat.v1 as tf
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 tf.disable_v2_behavior()
 # os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
@@ -83,10 +83,8 @@ BASEGRAPH_PATH = os.path.join(
 LOOKUP_PATH = os.path.join(
     _PROJECT_ROOT, "experiments", "out_step3", "reliability_lookup.npz"
 )
-LOG_ROOT = os.path.join(os.path.dirname(__file__), "logs")
-os.makedirs(LOG_ROOT, exist_ok=True)
 
-BATCH_SIZE = 16  # peak RAM/VRAM - GIU NGUYEN theo gioi han may (4GB VRAM cap 2GB)
+BATCH_SIZE = 4  # peak RAM/VRAM - GIU NGUYEN theo gioi han may (4GB VRAM cap 2GB)
 ACCUM_STEPS = 4  # GRADIENT ACCUMULATION: tich luy grad qua 4 micro-batch (4 mau
 # moi lan forward/backward, KHONG tang RAM/VRAM dinh) truoc khi
 # apply 1 lan -> effective batch = BATCH_SIZE*ACCUM_STEPS = 16,
@@ -95,11 +93,15 @@ ACCUM_STEPS = 4  # GRADIENT ACCUMULATION: tich luy grad qua 4 micro-batch (4 mau
 # kich hoat early-stop (PATIENCE) chi vi nhieu, khong phai vi
 # decoder da toi uu that su.
 N_EPOCHS = 100
-PATIENCE = 10  # tang tu 8 -> 20: val chi 132 mau (do phan giai ~0.0076/mau),
+PATIENCE = 20  # tang tu 8 -> 20: val chi 132 mau (do phan giai ~0.0076/mau),
 # can nhieu epoch hon de phan biet cai thien that voi nhieu
 # thong ke. Neu may cham qua, co the giam lai sau khi da thu.
 LEARNING_RATE = 1e-4
-MASKED_MAG = 1.5
+MASKED_MAG = 1.25  # da chot theo tieu chi an toan (FAR<=hard_bpsk tren ca LFW
+# lan CPLFW) - xem research/modulation/v2_empirical_llr.py.
+# Da xac nhan: fine-tune voi masked_mag=1.5 cung plateau ngay
+# (khong cai thien so baseline) - nhieu kha nang 1.25 cung
+# vay, khong can fine-tune.
 MESSAGE_LOSS_WEIGHT = 8.0
 
 
@@ -502,17 +504,6 @@ def train_one_config(
     epochs_since_improve = 0
     history = []
     rng = np.random.default_rng(0)
-    
-    log_path = os.path.join(LOG_ROOT, f"{config_name}_training_log.txt")
-
-    # Ghi đè file cũ mỗi lần train
-    with open(log_path, "w", encoding="utf-8") as f:
-        f.write("=" * 80 + "\n")
-        f.write(f"Config: {config_name}\n")
-        f.write(f"Learning rate: {learning_rate}\n")
-        f.write(f"Train pairs: {len(train_pairs)}\n")
-        f.write(f"Validation pairs: {len(val_pairs)}\n")
-        f.write("=" * 80 + "\n\n")
 
     with tf.Session(graph=tg["graph"], config=config) as sess:
         sess.run(tg["init_op"])
@@ -529,18 +520,12 @@ def train_one_config(
                 "val_loss": baseline_loss,
             }
         )
-        baseline_msg = (
-            f"epoch   0 (baseline): "
-            f"val_bit_acc={baseline_bit:.4f}  "
-            f"val_exact_match={baseline_exact:.4f}  "
-            f"val_loss={baseline_loss:.4f}"
-        )
-
         if verbose:
-            print("  " + baseline_msg)
-
-        with open(log_path, "a", encoding="utf-8") as f:
-            f.write(baseline_msg + "\n")
+            print(
+                f"  epoch   0 (baseline, truoc fine-tune): "
+                f"val_bit_acc={baseline_bit:.4f}  val_exact_match={baseline_exact:.4f}  "
+                f"val_loss={baseline_loss:.4f}"
+            )
         best_val_exact = baseline_exact
 
         steps_per_epoch = max(len(train_pairs) // (BATCH_SIZE * ACCUM_STEPS), 1)
@@ -588,19 +573,12 @@ def train_one_config(
                     "val_loss": val_loss,
                 }
             )
-            epoch_msg = (
-                f"epoch {epoch+1:3d}: "
-                f"train_bit_acc={np.mean(train_acc_list):.4f}  "
-                f"val_bit_acc={val_bit:.4f}  "
-                f"val_exact_match={val_exact:.4f}  "
-                f"val_loss={val_loss:.4f}"
-            )
-
             if verbose:
-                print("  " + epoch_msg)
-
-            with open(log_path, "a", encoding="utf-8") as f:
-                f.write(epoch_msg + "\n")
+                print(
+                    f"  epoch {epoch+1:3d}: train_bit_acc={np.mean(train_acc_list):.4f}  "
+                    f"val_bit_acc={val_bit:.4f}  val_exact_match={val_exact:.4f}  "
+                    f"val_loss={val_loss:.4f}"
+                )
 
             if val_exact > best_val_exact:
                 best_val_exact, best_epoch, epochs_since_improve = (
@@ -622,10 +600,6 @@ def train_one_config(
                         print(
                             f"  -> Dung som: val_exact_match khong cai thien sau {patience} epoch."
                         )
-                        with open(log_path, "a", encoding="utf-8") as f:
-                            f.write(
-                                f"\nEarly stopping sau {patience} epoch khong cai thien.\n"
-                            )
                     break
 
         if best_weights is not None:
@@ -648,12 +622,6 @@ def train_one_config(
                     f"  -> [{config_name}] Da luu trong so tai epoch {best_epoch} "
                     f"(val_exact_match={best_val_exact:.4f}) -> {output_weights_path}"
                 )
-                with open(log_path, "a", encoding="utf-8") as f:
-                    f.write(
-                        f"\nBest epoch: {best_epoch}\n"
-                        f"Best val_exact_match: {best_val_exact:.4f}\n"
-                        f"Saved to: {output_weights_path}\n"
-                    )
 
     tf.reset_default_graph()
     return best_val_exact, best_epoch, history

@@ -1,0 +1,50 @@
+{
+  "hard_bpsk": {
+    "genuine_success": 399,
+    "genuine_total": 413,
+    "impostor_success": 0,
+    "impostor_total": 393,
+    "FRR": 0.03389830508474578,
+    "FAR": 0.0
+  },
+  "empirical_llr_mag0.75": {
+    "genuine_success": 397,
+    "genuine_total": 413,
+    "impostor_success": 0,
+    "impostor_total": 393,
+    "FRR": 0.03874092009685226,
+    "FAR": 0.0
+  },
+  "empirical_llr_mag1.0": {
+    "genuine_success": 401,
+    "genuine_total": 413,
+    "impostor_success": 0,
+    "impostor_total": 393,
+    "FRR": 0.029055690072639195,
+    "FAR": 0.0
+  },
+  "empirical_llr_mag1.1": {
+    "genuine_success": 401,
+    "genuine_total": 413,
+    "impostor_success": 0,
+    "impostor_total": 393,
+    "FRR": 0.029055690072639195,
+    "FAR": 0.0
+  },
+  "empirical_llr_mag1.25": {
+    "genuine_success": 403,
+    "genuine_total": 413,
+    "impostor_success": 0,
+    "impostor_total": 393,
+    "FRR": 0.02421307506053272,
+    "FAR": 0.0
+  },
+  "empirical_llr_mag1.5": {
+    "genuine_success": 404,
+    "genuine_total": 413,
+    "impostor_success": 0,
+    "impostor_total": 393,
+    "FRR": 0.021791767554479424,
+    "FAR": 0.0
+  }
+}

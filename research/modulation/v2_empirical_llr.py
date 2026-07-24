@@ -43,7 +43,7 @@ class EmpiricalLLR(BaseModulation):
     def __init__(
         self,
         lookup_path: str = _DEFAULT_LOOKUP_PATH,
-        masked_mag: float = 1.5,
+        masked_mag: float = 1.25,
     ):
         if not os.path.exists(lookup_path):
             raise FileNotFoundError(
@@ -54,11 +54,19 @@ class EmpiricalLLR(BaseModulation):
         self._margin_bp = data["margin_breakpoints"]
         self._p_bp = data["p_breakpoints"]
         self._eps = float(data["eps"])
-        # Biên độ gán cho bit bị mask (mask_r=0). Giữ NGUYÊN logic đã kiểm
-        # chứng ở v1_soft_distance_llr: y_noisy tại các vị trí này = helper_data,
-        # biết trước TẤT ĐỊNH (không phụ thuộc embedding) -> margin không có ý
-        # nghĩa gì ở đây, và gán độ tin cậy cao (như max_mag) từng gây FAR=39.2%
-        # trong thực nghiệm trước. masked_mag=1.5 khớp quy ước hard-BPSK.
+        # Biên độ gán cho bit bị mask (mask_r=0). GIÁ TRỊ MẶC ĐỊNH 1.25 chọn
+        # theo TIÊU CHÍ ƯU TIÊN BẢO MẬT (hệ thống xác thực - FAR quan trọng
+        # hơn FRR): sweep trên tập 'tune' (835 mẫu impostor) ban đầu chọn
+        # masked_mag=1.5 vì FAR=0.0000 ở đó, nhưng khi validate trên tập
+        # 'select' với mẫu impostor LỚN HƠN (CPLFW, 1742 mẫu), masked_mag=1.5
+        # LỘ RA FAR=0.46% (8/1742) - CAO HƠN FAR của hard_bpsk (0.11%,
+        # 2/1742) trên chính dataset đó -> không đạt tiêu chí an toàn.
+        #
+        # 1.25 là giá trị CAO NHẤT trong sweep giữ FAR <= FAR của hard_bpsk
+        # TRÊN CẢ HAI dataset validate (LFW: FAR=0.0000 <= 0.0000; CPLFW:
+        # FAR=0.0006 <= 0.0011) - xem experiments/sweep_masked_mag_select.py.
+        # Tại giá trị này FRR vẫn cải thiện đáng kể so với hard_bpsk (CPLFW:
+        # 24.38% -> 14.76%), chỉ là bảo thủ hơn 1.5 để ưu tiên an toàn.
         self.masked_mag = masked_mag
         self.lookup_path = lookup_path
 
