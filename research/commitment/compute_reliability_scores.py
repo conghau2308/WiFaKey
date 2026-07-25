@@ -27,14 +27,20 @@ project_root):
 
     python research/commitment/compute_reliability_scores.py \\
         --project-root . \\
-        --output research/commitment/reliability_tune.npy
+        --output research/commitment/out_reliability_scores/reliability_tune.npy
 """
 
 import argparse
 import csv
 import os
+import sys
 
 import numpy as np
+
+_PROJECT_ROOT = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..")
+)
+sys.path.insert(0, _PROJECT_ROOT)
 
 from wifakey_module.wifakey_lib import utils as wfk_utils
 
@@ -155,10 +161,47 @@ def main():
 
     var_intra = intra_flip * (1 - intra_flip)
     var_inter = inter_flip * (1 - inter_flip)
-    F = (inter_flip - intra_flip) ** 2 / (var_intra + var_inter + args.eps)
 
-    print(f"\nF_i: min={F.min():.4f}, max={F.max():.4f}, mean={F.mean():.4f}")
-    print(f"Top-10 dimension đáng tin nhất (index): {np.argsort(-F)[:10].tolist()}")
+    # LƯU Ý QUAN TRỌNG (rút ra từ benchmark thật trên tune set): với hệ thống
+    # hiện tại, FAR đo được = 0.0000% ở MỌI mức M/kappa đã thử — nghĩa là
+    # impostor separation đang dư thừa margin rất lớn, KHÔNG phải ràng buộc
+    # đang bó buộc hệ thống. Công thức Fisher cân bằng cả intra VÀ inter sẽ
+    # lãng phí "ngân sách chọn lọc" vào việc tối ưu inter_flip (không cần
+    # thiết lúc này), đánh đổi với việc chọn đúng bit có intra_flip thấp
+    # nhất — đây là nguyên nhân pool theo Fisher-score có thể cho GMR TỆ HƠN
+    # cả chọn đều. Vì vậy dùng "F_i" chỉ dựa thuần trên intra_flip thấp,
+    # bỏ hẳn ảnh hưởng của inter_flip khỏi tiêu chí xếp hạng.
+    #
+    # Nếu sau này FAR không còn dư thừa (ví dụ M lớn hơn khiến impostor bị
+    # kéo gần ngưỡng), cần khôi phục lại thành phần inter_flip — nhưng phải
+    # đo lại FAR thật trước khi quyết định, không giả định trước.
+    eps = args.eps
+    F = -intra_flip  # xếp hạng giảm dần theo -intra_flip == tăng dần theo intra_flip
+    F_fisher_reference = (inter_flip - intra_flip) / np.sqrt(
+        var_intra + var_inter + eps
+    )
+
+    n_inverted = int((inter_flip < intra_flip).sum())
+    print(
+        f"\nSố dimension có intra_flip > inter_flip (bit 'ngược hướng', PHẢI bị "
+        f"loại khỏi pool): {n_inverted} / {full_len} "
+        f"({100*n_inverted/full_len:.1f}%)"
+    )
+
+    print(
+        f"\nF_i (intra-only, dùng để chọn pool): min={F.min():.4f}, max={F.max():.4f}, mean={F.mean():.4f}"
+    )
+    print(
+        f"  (đối chiếu) Fisher-score cũ (intra+inter): min={F_fisher_reference.min():.4f}, "
+        f"max={F_fisher_reference.max():.4f}, mean={F_fisher_reference.mean():.4f}"
+    )
+    top10_intra_only = np.argsort(-F)[:10]
+    top10_fisher = np.argsort(-F_fisher_reference)[:10]
+    overlap = len(set(top10_intra_only.tolist()) & set(top10_fisher.tolist()))
+    print(f"  Số dimension trùng nhau trong top-10 giữa 2 tiêu chí: {overlap}/10")
+    print(
+        f"Top-10 dimension đáng tin nhất (intra_flip thấp nhất): {top10_intra_only.tolist()}"
+    )
 
     np.save(args.output, F)
     print(f"\nĐã lưu reliability scores vào: {args.output}")

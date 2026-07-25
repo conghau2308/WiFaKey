@@ -1,0 +1,4 @@
+timestamp,label,variant,gmr,far,errors,n_genuine_pairs,n_impostor_pairs,max_pairs,kappa,pool_size,reliability_scores,force_cpu
+2026-07-25 13:22:05,baseline_and_mask(kappa=0.3125),baseline,95.6867,0.0000,0,881,835,,0.3125,,,False
+2026-07-25 13:26:59,v1_uniform_selection,v1,42.4518,0.0000,0,881,835,,,,,False
+2026-07-25 14:34:24,v2_pool_M900,v2,34.6198,0.0000,0,881,835,,,900,research/commitment/reliability_tune.npy,False
