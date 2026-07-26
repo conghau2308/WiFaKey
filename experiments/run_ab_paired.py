@@ -83,6 +83,7 @@ KNOWN_DATASETS = [
     "labeled_faces_in_the_wild",
     "face-detection-and-re-identification",
     "cplfw",
+    "demogpairs",
 ]
 
 
