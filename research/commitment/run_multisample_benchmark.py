@@ -39,7 +39,7 @@ import numpy as np
 
 from research.commitment.v1_multisample import MultisampleWiFaKeyHandler
 
-IMPOSTOR_PER_GENUINE = 20
+IMPOSTOR_PER_GENUINE = 20 # điều chỉnh con số này cho đúng với file build_multisample_pairs_demogpairs.py (để dễ traceback)
 
 def load_embedding(cache_dir: str, cache_filename: str) -> np.ndarray:
     return np.load(os.path.join(cache_dir, cache_filename))
