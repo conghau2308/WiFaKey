@@ -2,3 +2,6 @@ timestamp,label,variant,gmr,far,errors,n_genuine_pairs,n_impostor_pairs,max_pair
 2026-07-25 13:22:05,baseline_and_mask(kappa=0.3125),baseline,95.6867,0.0000,0,881,835,,0.3125,,,False
 2026-07-25 13:26:59,v1_uniform_selection,v1,42.4518,0.0000,0,881,835,,,,,False
 2026-07-25 14:34:24,v2_pool_M900,v2,34.6198,0.0000,0,881,835,,,900,research/commitment/reliability_tune.npy,False
+2026-07-25 20:31:44,v2_pool_M900,v2,33.7117,0.0000,0,881,835,,,900,research/commitment/reliability_tune.npy,False
+2026-07-26 09:48:40,diagnostic_fixed_prefix,fixed_prefix,41.2032,0.0000,0,881,835,,,,,False
+2026-07-26 10:04:19,diagnostic_v1_no_sort,v1_no_sort,40.8627,0.0000,0,881,835,,,,,False

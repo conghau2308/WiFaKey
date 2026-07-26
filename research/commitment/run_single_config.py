@@ -10,9 +10,12 @@ tràn, dù mỗi handler đã "del" xong.
 
 Cách chạy (1 lệnh = 1 cấu hình = 1 process = giải phóng sạch khi xong):
 
-    python research/commitment/run_single_config.py --variant baseline --kappa 0.3125 --max-pairs 50 --results-csv research/commitment/results_log.csv
-    python research/commitment/run_single_config.py --variant v1 --max-pairs 50 --results-csv research/commitment/results_log.csv
-    python research/commitment/run_single_config.py --variant v2 --pool-size 900 --reliability-scores research/commitment/reliability_tune.npy --max-pairs 50 --results-csv research/commitment/results_log.csv
+    python research/commitment/run_single_config.py --variant baseline --kappa 0.3125 --max-pairs 50 --results-csv research/commitment/logs/results_log.csv
+    python research/commitment/run_single_config.py --variant v1 --max-pairs 50 --results-csv research/commitment/logs/results_log.csv
+    python research/commitment/run_single_config.py --variant v2 --pool-size 900 --reliability-scores research/commitment/reliability_tune.npy --max-pairs 50 --results-csv research/commitment/logs/results_log.csv
+    
+    python research/commitment/run_single_config.py --variant fixed_prefix --results-csv research/commitment/results_log.csv
+    python research/commitment/run_single_config.py --variant v1_no_sort --results-csv research/commitment/results_log.csv
 
 In kết quả ra 1 dòng CSV cuối cùng (dễ parse bởi orchestrator):
     RESULT,<label>,<gmr>,<far>,<errors>
@@ -135,7 +138,7 @@ def run_benchmark(handler, genuine_rows, impostor_rows, cache_dir: str, label: s
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--variant", required=True, choices=["baseline", "v1", "v2"])
+    ap.add_argument("--variant", required=True, choices=["baseline", "v1", "v2", "fixed_prefix", "v1_no_sort"])
     ap.add_argument("--project-root", default=".")
     ap.add_argument("--wifakey-data-dir", default=None)
     ap.add_argument("--pairs-dir", default=None)
@@ -203,6 +206,16 @@ def main():
             data_path=data_dir, weights_path=weights_path, biases_path=biases_path
         )
         label = "v1_uniform_selection"
+    
+    elif args.variant == "fixed_prefix":
+        from research.commitment.diagnostic_fixed_prefix import FixedPrefixWiFaKeyHandler
+        handler = FixedPrefixWiFaKeyHandler(data_path=data_dir, weights_path=weights_path, biases_path=biases_path)
+        label = "diagnostic_fixed_prefix"
+
+    elif args.variant == "v1_no_sort":
+        from research.commitment.diagnostic_v1_no_sort import NoSortSelectionWiFaKeyHandler
+        handler = NoSortSelectionWiFaKeyHandler(data_path=data_dir, weights_path=weights_path, biases_path=biases_path)
+        label = "diagnostic_v1_no_sort"
 
     else:  # v2
         if not args.reliability_scores or not args.pool_size:
