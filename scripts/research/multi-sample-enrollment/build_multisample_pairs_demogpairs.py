@@ -44,7 +44,7 @@ RANDOM_SEED = 42
 # Số impostor pair sinh ra CHO MỖI genuine trial (giữ tỉ lệ genuine:impostor
 # cân bằng để benchmark GMR/FAR trên cùng 1 quy mô, giống tune_genuine/
 # tune_impostor của LFW).
-IMPOSTOR_PER_GENUINE = 1
+IMPOSTOR_PER_GENUINE = 20
 
 
 def load_metadata():

@@ -39,6 +39,7 @@ import numpy as np
 
 from research.commitment.v1_multisample import MultisampleWiFaKeyHandler
 
+IMPOSTOR_PER_GENUINE = 20
 
 def load_embedding(cache_dir: str, cache_filename: str) -> np.ndarray:
     return np.load(os.path.join(cache_dir, cache_filename))
@@ -183,6 +184,7 @@ def main():
         record = {
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "label": label,
+            "impostor_per_genuine": IMPOSTOR_PER_GENUINE,
             "mode": args.mode,
             "k": args.k,
             "gmr": f"{gmr:.4f}",
