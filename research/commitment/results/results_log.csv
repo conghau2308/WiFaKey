@@ -5,3 +5,13 @@ timestamp,label,variant,gmr,far,errors,n_genuine_pairs,n_impostor_pairs,max_pair
 2026-07-25 20:31:44,v2_pool_M900,v2,33.7117,0.0000,0,881,835,,,900,research/commitment/reliability_tune.npy,False
 2026-07-26 09:48:40,diagnostic_fixed_prefix,fixed_prefix,41.2032,0.0000,0,881,835,,,,,False
 2026-07-26 10:04:19,diagnostic_v1_no_sort,v1_no_sort,40.8627,0.0000,0,881,835,,,,,False
+2026-07-27 02:53:18,adaptive_quantization,adaptive_quant,39.5006,0.0000,0,881,835,,,,,False
+2026-07-27 10:36:32,reduced_key_128,reduced_key,42.1112,0.0000,0,881,835,,,,,False
+2026-07-27 12:18:57,rs_erasure_nsym4,rs_erasure,43.8138,0.0000,0,881,835,,,,,False,4
+2026-07-27 13:08:23,rs_erasure_nsym8,rs_erasure,47.2191,0.0000,0,881,835,,,,,False,8
+2026-07-27 13:18:00,rs_erasure_nsym10,rs_erasure,50.0568,0.0000,0,881,835,,,,,False,10
+2026-07-27 13:20:46,rs_erasure_nsym12,rs_erasure,49.9432,0.0000,0,881,835,,,,,False,12
+2026-07-27 13:22:51,rs_erasure_nsym12,rs_erasure,53.5755,0.0000,0,881,835,,,,,False,12
+2026-07-27 13:32:58,rs_erasure_nsym13,rs_erasure,53.6890,0.0000,0,881,835,,,,,False,13
+2026-07-27 13:42:30,rs_erasure_nsym14,rs_erasure,55.2781,0.0000,0,881,835,,,,,False,14
+2026-07-27 13:45:47,rs_erasure_nsym15,rs_erasure,55.7321,0.0000,0,881,835,,,,,False,15

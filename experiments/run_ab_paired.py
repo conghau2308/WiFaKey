@@ -39,8 +39,12 @@ Yêu cầu chuẩn bị trước (tuỳ dataset):
     python scripts/02b_extract_embeddings_face_detection.py
 
 Cách chạy:
-    python experiments/run_ab_paired.py --dataset labeled_faces_in_the_wild
+    python experiments/run_ab_paired.py --dataset labeled_faces_in_the_wild --tier select
     python experiments/run_ab_paired.py --dataset face-detection-and-re-identification
+    python experiments/run_ab_paired.py --dataset demogpairs --tier demog_samefold
+    python experiments/run_ab_paired.py --dataset demogpairs --tier demog_crossfold
+    
+    # Nên giảm số cặp impostor trong crossfold trước khi chạy
 """
 
 import sys
@@ -85,6 +89,12 @@ KNOWN_DATASETS = [
     "cplfw",
     "demogpairs",
 ]
+
+_LOG_DIR = os.path.join(
+    _PROJECT_ROOT,
+    "experiments",
+    "logs"
+)
 
 
 def get_dataset_paths(dataset_name: str):
@@ -166,6 +176,12 @@ def load_test_pairs_with_ids(cache_dir: str, pairs_dir: str, tier: str = "select
                         emb_verify=emb_verify,
                         is_genuine=is_genuine,
                         seed=seed,
+
+                        # thêm metadata
+                        name_enroll=row["name_enroll"],
+                        imagenum_enroll=row["imagenum_enroll"],
+                        name_verify=row["name_verify"],
+                        imagenum_verify=row["imagenum_verify"],
                     )
                 )
 
@@ -199,6 +215,7 @@ def run_all_variants_paired(handler, decoder, variants, test_pairs):
         for name, _, _ in variants
     }
     per_pair = {name: [] for name, _, _ in variants}
+    failure_logs = {name: [] for name, _, _ in variants}
 
     for pair in test_pairs:
         # Reseed 1 lần / cặp rồi enroll() 1 lần duy nhất - dùng chung cho
@@ -219,6 +236,24 @@ def run_all_variants_paired(handler, decoder, variants, test_pairs):
                 key_hash,
             )
             per_pair[name].append(int(success))
+            
+            if (not pair["is_genuine"]) and success:
+                failure_logs[name].append(
+                    {
+                        "type": "FalseAccept",
+                        "enroll": f'{pair["name_enroll"]}_{int(pair["imagenum_enroll"]):04d}',
+                        "verify": f'{pair["name_verify"]}_{int(pair["imagenum_verify"]):04d}',
+                    }
+                )
+                
+            if pair["is_genuine"] and (not success):
+                failure_logs[name].append(
+                    {
+                        "type": "FalseReject",
+                        "enroll": f'{pair["name_enroll"]}_{int(pair["imagenum_enroll"]):04d}',
+                        "verify": f'{pair["name_verify"]}_{int(pair["imagenum_verify"]):04d}',
+                    }
+                )
 
             m = metrics[name]
             if pair["is_genuine"]:
@@ -233,7 +268,7 @@ def run_all_variants_paired(handler, decoder, variants, test_pairs):
         m["FRR"] = 1 - m["genuine_success"] / max(m["genuine_total"], 1)
         m["FAR"] = m["impostor_success"] / max(m["impostor_total"], 1)
 
-    return metrics, per_pair
+    return metrics, per_pair, failure_logs
 
 
 def mcnemar_exact(success_a, success_b, label_a, label_b, subset_mask=None):
@@ -297,6 +332,7 @@ def parse_args():
 
 
 def main():
+    os.makedirs(_LOG_DIR, exist_ok=True)
     args = parse_args()
 
     print(f"=== Dataset: {args.dataset} | tier: {args.tier} ===")
@@ -334,7 +370,7 @@ def main():
         ),
     ]
 
-    metrics, per_pair = run_all_variants_paired(handler, decoder, variants, test_pairs)
+    metrics, per_pair, failure_logs = run_all_variants_paired(handler, decoder, variants, test_pairs)
 
     os.makedirs(_RESULTS_DIR, exist_ok=True)
     out_path = os.path.join(
@@ -363,6 +399,17 @@ def main():
         )
 
     genuine_mask = [p["is_genuine"] for p in test_pairs]
+    
+    print("\n================ FAILURES ================")
+
+    for name in failure_logs:
+        print(f"\n{name}")
+
+        for item in failure_logs[name]:
+            print(
+                f'{item["type"]:12s}  '
+                f'{item["enroll"]}  <--->  {item["verify"]}'
+            )
 
     print("\n--- McNemar's exact test (chỉ trên genuine pairs, đo FRR) ---")
     mcnemar_exact(
@@ -415,6 +462,35 @@ def main():
         )
     else:
         print("\n(FAR = 0 cho mọi variant - không cần McNemar's test cho impostor.)")
+    
+    log_path = os.path.join(
+        _LOG_DIR,
+        f"failure_log_{args.dataset}_{args.tier}.csv"
+    )
+
+    with open(log_path, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            "dataset",
+            "tier",
+            "variant",
+            "type",
+            "enroll",
+            "verify",
+        ])
+
+        for variant, items in failure_logs.items():
+            for item in items:
+                writer.writerow([
+                args.dataset,
+                args.tier,
+                variant,
+                item["type"],
+                item["enroll"],
+                item["verify"],
+            ])
+
+    print(f"Failure log saved: {log_path}")
 
 
 if __name__ == "__main__":

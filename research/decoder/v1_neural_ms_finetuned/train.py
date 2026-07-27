@@ -1,28 +1,22 @@
 """
 train.py - Fine-tune Neural-MS decoder tren phan phoi nhieu THAT.
 
-QUAN TRONG:
-- Khoi tao tu trong so GOC (khong random init) - chi tinh chinh.
-- Du lieu train lay tu tap 'tune' (Tang 1) - KHONG dung tap 'select'/'final'.
-- Luu trong so moi vao thu muc RIENG (Weights_Var_MS_finetuned/), khong
-  ghi de ban goc.
-- TRUNCATED BACKPROP: chi backprop qua `trainable_iters` vong lap CUOI
-  (trainable=False + tf.stop_gradient tai ranh gioi dong bang).
-- HOISTED CONSTANTS: cac ma tran cau truc duoc tao tf.constant MOT LAN
-  DUY NHAT truoc vong lap 25 lan, tranh nhan ban 25 lan trong graph.
-- BATCH-AGNOSTIC GRAPH: placeholder [None, N, Z], moi reshape dung -1.
-- TRAIN/VAL SPLIT + EARLY STOPPING + CHUNKED EVAL: tune_genuine.csv tach
-  train/val noi bo. Val danh gia TOAN BO moi epoch, chia lo nho de khong
-  tran bo nho. Baseline (epoch=0, truoc fine-tune) duoc ghi lai de so
-  sanh truc tiep.
-- EXACT_MATCH (quan trong nhat): ngoai bit_correct (trung binh dung/sai
-  tung bit tren CA 832 bit codeword, gom ca phan parity khong ai quan
-  tam), con theo doi `exact_match` - ty le mau co DU 160 bit message
-  (code_k*Z bit DAU cua codeword) dung TOAN BO. Day moi la con so PHAN
-  ANH DUNG nhung gi handler.verify() that kiem tra (hash ca block message,
-  tat-ca-hoac-khong) - bit_correct cao khong dam bao exact_match cao neu
-  loi rai rac moi mau vai bit khac nhau. Viec chon best_epoch/so sanh
-  trainable_iters PHAI dua tren exact_match, khong phai bit_correct.
+SUA LAN NAY (sau khi xac nhan lan train truoc dung SAI co che commitment
+va SAI modulation, khien ket qua fine-tune khong chuyen duoc sang benchmark
+that):
+  1. `_encode_pair()`: doi tu AND-mask-ve-0 (kappa mask cu, da bi va vi lo
+     hong bao mat) sang SELECTION-PUNCTURING dung nhu SecureWiFaKeyHandler
+     dang dung trong benchmark that -- moi bit trong feature_length vi tri
+     chon deu la bit that, khong co bit nao bi ep ve hang so.
+  2. Margin: doi tu `binarize_with_confidence` (v0, confidence dung chung
+     ca block 3 bit) sang `binarize_with_perbit_confidence` (v1, margin
+     rieng tung bit) -- khop dung dinh nghia da dung de fit
+     reliability_lookup.npz.
+  3. Modulation: doi tu `SoftDistanceLLR` (v1, da xac nhan yeu hon ca
+     hard-BPSK) sang `EmpiricalLLR` (v2, da xac nhan tot hon baseline+v1
+     tren ca FAR/FRR qua benchmark that rieng biet).
+  4. Bat lai sweep_trainable_iters.py voi du candidate [4,8,12,16,20]
+     (lan truoc chi chay dung 1 diem trainable_iters=4).
 
 Cach chay:
     python research/decoder/v1_neural_ms_finetuned/train.py
@@ -43,8 +37,10 @@ sys.path.insert(0, _PROJECT_ROOT)
 
 from wifakey_module.wifakey_handler import WiFaKeyHandler
 from wifakey_module.wifakey_lib import Encode
-from research.quantizer.v0_lssc_with_confidence import binarize_with_confidence
-from research.modulation.v1_soft_distance_llr import SoftDistanceLLR
+from research.quantizer.v1_lssc_with_perbit_confidence import (
+    binarize_with_perbit_confidence,
+)
+from research.modulation.v2_empirical_llr import EmpiricalLLR
 
 N, m, Z = 52, 42, 16
 ITERS_MAX = 25
@@ -81,10 +77,6 @@ BATCH_SIZE = 16
 N_EPOCHS = 100
 PATIENCE = 8
 LEARNING_RATE = 1e-4
-SCALE = 60.0
-MIN_MAG = 0.1
-MAX_MAG = 5.0
-MASKED_MAG = 1.0
 
 
 def load_embedding(name, imagenum):
@@ -283,15 +275,6 @@ def build_trainable_decoder(
         decoder_output = net_dict[f"ya_output{ITERS_MAX-1}"]
         target_flat = tf.reshape(target, [-1, N * Z])
 
-        # QUAN TRỌNG: loss gốc chia đều cho cả 832 bit (672 bit parity +
-        # 160 bit message) - vì parity chiếm 81% số bit, gradient chủ yếu
-        # tối ưu cho ĐÚNG PHẦN KHÔNG QUYẾT ĐỊNH exact_match (verify() chỉ
-        # hash 160 bit message, bỏ qua parity hoàn toàn). Thực nghiệm xác
-        # nhận: val_exact_match ĐỨNG YÊN qua nhiều epoch dù bit_acc dao
-        # động - dấu hiệu rõ ràng của việc loss "lệch trọng tâm" này.
-        # Sửa: nhân trọng số MESSAGE_LOSS_WEIGHT cho 160 bit message, giữ
-        # nguyên trọng số 1.0 cho phần parity (vẫn cần ít nhiều để decoder
-        # hội tụ đúng cấu trúc mã, nhưng không được lấn át phần message).
         code_k = N - m
         key_length = code_k * Z
         MESSAGE_LOSS_WEIGHT = 8.0
@@ -305,11 +288,6 @@ def build_trainable_decoder(
             tf.cast(tf.equal(tf.sign(decoder_output), tf.sign(target_flat)), tf.float32)
         )
 
-        # exact_match: tinh TREN DUNG key_length bit DAU (phan message,
-        # code_k*Z = 160 bit) - khop CHINH XAC voi handler.verify() that
-        # (chi hash decoded_codeword[:key_length], khong quan tam 672 bit
-        # parity con lai). Day la thuoc do QUYET DINH genuine_success that,
-        # bit_correct chi la proxy yeu hon (tinh tren ca 832 bit).
         decoder_key_bits = decoder_output[:, :key_length]
         target_key_bits = target_flat[:, :key_length]
         sample_all_correct = tf.reduce_all(
@@ -343,25 +321,34 @@ def build_trainable_decoder(
 
 
 def _encode_pair(handler, encoder, modulation, emb_enroll, emb_verify, rng):
+    # --- Enroll: SELECTION-PUNCTURING (v1_selection_puncturing), KHONG
+    # con AND-mask-ve-0 -- moi bit trong feature_length vi tri chon deu
+    # la bit sinh trac THAT, khop dung co che benchmark that dang dung
+    # (SecureWiFaKeyHandler), khong phai co che kappa-mask cu da bi va.
     b_full_e = handler._binarize_full(emb_enroll).astype(np.uint8)
-    u = rng.uniform(0.0, 1.0, size=len(b_full_e))
-    mask_r = (u >= handler.kappa).astype(np.uint8)
-    b_selected_e = (b_full_e & mask_r)[: handler.feature_length]
+    full_len = len(b_full_e)
+    selection_indices = rng.choice(full_len, size=handler.feature_length, replace=False)
+    selection_indices.sort()
+    b_selected_e = b_full_e[selection_indices]
 
     random_key = rng.integers(0, 2, size=(1, handler.key_length))
     codeword = encoder.encode_LDPC(random_key).flatten().astype(np.uint8)
     helper_data = np.logical_xor(b_selected_e, codeword).astype(np.uint8)
 
+    # --- Verify: margin PER-BIT dung chuan (khong phai confidence dung
+    # chung ca block nhu v0) -- khop dung dinh nghia da dung de fit
+    # reliability_lookup.npz (xem v1_lssc_with_perbit_confidence.py).
     projected_v = np.dot(emb_verify, handler.M_matrix)
-    bits_v, confidence_v = binarize_with_confidence(projected_v, handler.intervals)
-    b_selected_v = (bits_v.astype(np.uint8) & mask_r)[: handler.feature_length]
-    conf_selected = confidence_v[: handler.feature_length]
-    mask_selected = mask_r[: handler.feature_length]
+    bits_v, margin_v = binarize_with_perbit_confidence(projected_v, handler.intervals)
+    b_selected_v = bits_v.astype(np.uint8)[selection_indices]
+    margin_selected = margin_v[selection_indices]
 
     y_noisy_bits = np.logical_xor(b_selected_v, helper_data)
-    llr = modulation(
-        y_noisy_bits, context={"distance": conf_selected, "mask": mask_selected}
-    )
+
+    # KHONG truyen context["mask"] -- selection-puncturing khong co khai
+    # niem "bit bi che" nua, moi bit da chon deu that; masked_mag cua
+    # EmpiricalLLR se khong bao gio duoc dung toi, dung ban chat.
+    llr = modulation(y_noisy_bits, context={"margin": margin_selected})
 
     target_bipolar = codeword.astype(np.float32) * 2 - 1
     return llr.reshape(N, Z), target_bipolar.reshape(N, Z)
@@ -399,8 +386,6 @@ def make_eval_batch(handler, encoder, modulation, pairs, rng):
 
 
 def evaluate_val_chunked(sess, tg, val_llr, val_target, eval_chunk_size):
-    """Tra ve (val_loss, val_bit_acc, val_exact_match) - trung binh co
-    trong so theo so mau that cua tung lo."""
     n = val_llr.shape[0]
     fetches = [tg["loss"], tg["bit_correct"], tg["exact_match"]]
 
@@ -442,16 +427,9 @@ def train_one_config(
     eval_chunk_size=BATCH_SIZE,
     learning_rate=LEARNING_RATE,
 ):
-    """Train 1 cau hinh. QUAN TRONG: best_epoch/early-stopping gio dua
-    tren `exact_match` (ty le mau dung TOAN BO 160 bit message), KHONG
-    con dua tren `bit_correct` (trung binh tung bit tren ca 832 bit) -
-    vi exact_match moi la con so khop voi genuine_success that.
-    """
     handler = WiFaKeyHandler()
     encoder = Encode.Proto_LDPC(N, m, Z)
-    modulation = SoftDistanceLLR(
-        scale=SCALE, min_mag=MIN_MAG, max_mag=MAX_MAG, masked_mag=MASKED_MAG
-    )
+    modulation = EmpiricalLLR()
 
     train_pairs, val_pairs = load_tune_genuine_pairs()
     if verbose:

@@ -13,7 +13,7 @@ Cách chạy (1 lệnh = 1 cấu hình = 1 process = giải phóng sạch khi xo
     python research/commitment/run_single_config.py --variant baseline --kappa 0.3125 --max-pairs 50 --results-csv research/commitment/logs/results_log.csv
     python research/commitment/run_single_config.py --variant v1 --max-pairs 50 --results-csv research/commitment/logs/results_log.csv
     python research/commitment/run_single_config.py --variant v2 --pool-size 900 --reliability-scores research/commitment/reliability_tune.npy --max-pairs 50 --results-csv research/commitment/logs/results_log.csv
-    
+
     python research/commitment/run_single_config.py --variant fixed_prefix --results-csv research/commitment/results_log.csv
     python research/commitment/run_single_config.py --variant v1_no_sort --results-csv research/commitment/results_log.csv
 
@@ -78,6 +78,7 @@ def append_result_csv(csv_path: str, record: dict):
         "pool_size",
         "reliability_scores",
         "force_cpu",
+        "rs_nsym",
     ]
     file_exists = os.path.isfile(csv_path) and os.path.getsize(csv_path) > 0
 
@@ -138,7 +139,20 @@ def run_benchmark(handler, genuine_rows, impostor_rows, cache_dir: str, label: s
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--variant", required=True, choices=["baseline", "v1", "v2", "fixed_prefix", "v1_no_sort"])
+    ap.add_argument(
+        "--variant",
+        required=True,
+        choices=[
+            "baseline",
+            "v1",
+            "v2",
+            "fixed_prefix",
+            "v1_no_sort",
+            "adaptive_quant",
+            "reduced_key",
+            "rs_erasure",
+        ],
+    )
     ap.add_argument("--project-root", default=".")
     ap.add_argument("--wifakey-data-dir", default=None)
     ap.add_argument("--pairs-dir", default=None)
@@ -163,6 +177,14 @@ def main():
         default=None,
         help="Nếu set, APPEND kết quả (kèm timestamp + tham số) vào file CSV này. "
         "File sẽ được tạo mới nếu chưa tồn tại, không bao giờ bị ghi đè.",
+    )
+    ap.add_argument(
+        "--rs-nsym",
+        type=int,
+        default=4,
+        help="Số symbol ECC của Reed-Solomon (= sức sửa erasure tối đa). "
+        "Chỉ dùng cho --variant rs_erasure. Mặc định 4 (RS(20,16), khớp "
+        "đúng key_length=160 bit hiện tại với secret_bytes=16).",
     )
     args = ap.parse_args()
 
@@ -206,16 +228,61 @@ def main():
             data_path=data_dir, weights_path=weights_path, biases_path=biases_path
         )
         label = "v1_uniform_selection"
-    
+
     elif args.variant == "fixed_prefix":
-        from research.commitment.diagnostic_fixed_prefix import FixedPrefixWiFaKeyHandler
-        handler = FixedPrefixWiFaKeyHandler(data_path=data_dir, weights_path=weights_path, biases_path=biases_path)
+        from research.commitment.diagnostic_fixed_prefix import (
+            FixedPrefixWiFaKeyHandler,
+        )
+
+        handler = FixedPrefixWiFaKeyHandler(
+            data_path=data_dir, weights_path=weights_path, biases_path=biases_path
+        )
         label = "diagnostic_fixed_prefix"
 
     elif args.variant == "v1_no_sort":
-        from research.commitment.diagnostic_v1_no_sort import NoSortSelectionWiFaKeyHandler
-        handler = NoSortSelectionWiFaKeyHandler(data_path=data_dir, weights_path=weights_path, biases_path=biases_path)
+        from research.commitment.diagnostic_v1_no_sort import (
+            NoSortSelectionWiFaKeyHandler,
+        )
+
+        handler = NoSortSelectionWiFaKeyHandler(
+            data_path=data_dir, weights_path=weights_path, biases_path=biases_path
+        )
         label = "diagnostic_v1_no_sort"
+
+    elif args.variant == "adaptive_quant":
+        from research.quantizer.v1_adaptive_quantization import (
+            AdaptiveQuantizationWiFaKeyHandler,
+        )
+
+        handler = AdaptiveQuantizationWiFaKeyHandler(
+            data_path=data_dir,
+            weights_path=weights_path,
+            biases_path=biases_path,
+            per_dim_intervals_path="research/quantizer/per_dim_intervals.npy",
+        )
+        label = "adaptive_quantization"
+
+    elif args.variant == "reduced_key":
+        from research.commitment.v1_reduced_key_length import (
+            ReducedKeyLengthWiFaKeyHandler,
+        )
+
+        handler = ReducedKeyLengthWiFaKeyHandler(
+            data_path=data_dir,
+            weights_path=weights_path,
+            biases_path=biases_path,
+            effective_key_length=128,
+        )
+        label = "reduced_key_128"
+    
+    elif args.variant == "rs_erasure":
+        from research.commitment.v2_rs_erasure import RSErasureWiFaKeyHandler
+        handler = RSErasureWiFaKeyHandler(
+            data_path=data_dir, weights_path=weights_path, biases_path=biases_path,
+            rs_nsym=args.rs_nsym,
+            secret_bytes=(160 - args.rs_nsym * 8) // 8,  # tự suy ra để khớp key_length=160
+        )
+        label = f"rs_erasure_nsym{args.rs_nsym}"
 
     else:  # v2
         if not args.reliability_scores or not args.pool_size:
@@ -258,6 +325,7 @@ def main():
                 args.reliability_scores if args.variant == "v2" else ""
             ),
             "force_cpu": args.force_cpu,
+            "rs_nsym": args.rs_nsym if args.variant == "rs_erasure" else "",
         }
         try:
             append_result_csv(args.results_csv, record)
