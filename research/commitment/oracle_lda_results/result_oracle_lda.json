@@ -2,9 +2,9 @@
   "FRR": 0.2021276595744681,
   "genuine_n": 846,
   "genuine_success": 675,
-  "FAR_same": 0.0,
-  "FAR_cross": 0.0,
-  "FAR_combined": 0.0,
-  "impostor_success_same": 0,
-  "impostor_success_cross": 0
+  "FAR_same": 0.00019743336623889436,
+  "FAR_cross": 7.471049682480388e-05,
+  "FAR_combined": 0.00010840108401084011,
+  "impostor_success_same": 1,
+  "impostor_success_cross": 1
 }

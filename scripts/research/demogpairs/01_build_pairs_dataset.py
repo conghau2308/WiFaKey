@@ -57,7 +57,7 @@ MAX_GENUINE_PER_IDENTITY = 10
 # Số impostor pairs lấy cho MỖI danh mục (mỗi fold riêng cho same-fold,
 # mỗi cặp-fold riêng cho cross-fold) — cố định bằng nhau giữa các danh
 # mục để so sánh FAR giữa nhóm không bị lệch do cỡ mẫu khác nhau.
-TARGET_IMPOSTOR_PER_CATEGORY = 3000
+TARGET_IMPOSTOR_PER_CATEGORY = 10000
 
 FOLDS = [
     "Asian_Females",

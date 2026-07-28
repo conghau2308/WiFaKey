@@ -37,6 +37,8 @@ sau session.close(), nên tách process là cách chắc chắn nhất trên má
 
 from __future__ import annotations
 import argparse
+import contextlib
+import io
 import json
 import os
 import sys
@@ -159,8 +161,17 @@ def load_impostor_pairs_cross_fold(validate_ids):
     return pairs
 
 
+_EMBEDDING_CACHE: dict[str, np.ndarray] = {}
+
+
 def load_embedding(cache_filename: str) -> np.ndarray:
-    return np.load(os.path.join(CACHE_DIR, cache_filename))
+    """Cache trong RAM — cùng 1 ảnh có thể xuất hiện ở nhiều cặp (nhất là khi
+    tăng TARGET_IMPOSTOR_PER_CATEGORY), tránh đọc đĩa lặp lại."""
+    if cache_filename not in _EMBEDDING_CACHE:
+        _EMBEDDING_CACHE[cache_filename] = np.load(
+            os.path.join(CACHE_DIR, cache_filename)
+        )
+    return _EMBEDDING_CACHE[cache_filename]
 
 
 # =====================================================================
@@ -175,13 +186,22 @@ def run_benchmark(handler, pairs: list[Pair], expect_success: bool) -> dict:
     """
     n_total = len(pairs)
     n_verify_true = 0
-    for p in pairs:
+    _devnull = io.StringIO()
+    for idx, p in enumerate(pairs, start=1):
         emb_a = load_embedding(p.cache_a)
         emb_b = load_embedding(p.cache_b)
-        helper_data, mask_r, key_hash = handler.enroll(emb_a)
-        result = handler.verify(emb_b, helper_data, mask_r, key_hash)
+        # Chặn print("[WiFaKey] Verify SUCCESS/FAILED") của code gốc — chỉ
+        # tắt output console, KHÔNG đổi bất kỳ logic/kết quả nào bên trong.
+        with contextlib.redirect_stdout(_devnull):
+            helper_data, mask_r, key_hash = handler.enroll(emb_a)
+            result = handler.verify(emb_b, helper_data, mask_r, key_hash)
         if result:
             n_verify_true += 1
+
+        if idx % 500 == 0 or idx == n_total:
+            print(
+                f"    ... {idx}/{n_total} cặp (đang thấy {n_verify_true} verify()=True)"
+            )
 
     if expect_success:
         n_success = n_verify_true

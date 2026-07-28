@@ -25,8 +25,8 @@ CANDIDATES = [
     # 4,
     # 8,
     # 12,
-    # 16,
-    20,
+    16,
+    # 20,
 ]  # số vòng lặp cuối được phép fine-tune, thử từng giá trị
 OUT_DIR = os.path.join(os.path.dirname(__file__), "sweep_results")
 
