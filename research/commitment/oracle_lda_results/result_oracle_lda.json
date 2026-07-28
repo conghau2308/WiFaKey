@@ -1,0 +1,10 @@
+{
+  "FRR": 0.2021276595744681,
+  "genuine_n": 846,
+  "genuine_success": 675,
+  "FAR_same": 0.0,
+  "FAR_cross": 0.0,
+  "FAR_combined": 0.0,
+  "impostor_success_same": 0,
+  "impostor_success_cross": 0
+}

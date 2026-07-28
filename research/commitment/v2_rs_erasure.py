@@ -122,7 +122,7 @@ class RSErasureWiFaKeyHandler(SecureWiFaKeyHandler):
     def __init__(
         self,
         *args,
-        rs_nsym: int = 4,
+        rs_nsym: int = 8, # Sau khi đo đạc thì đây là kết quả tốt nhất (chưa tính đến bảo mật)
         secret_bytes: int = 16,
         symbol_confidence_agg: str = "min",
         **kwargs,

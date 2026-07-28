@@ -19,12 +19,14 @@ import os
 import json
 from train import train_one_config, ITERS_MAX
 
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
 CANDIDATES = [
-    4,
+    # 4,
     # 8,
     # 12,
     # 16,
-    # 20,
+    20,
 ]  # số vòng lặp cuối được phép fine-tune, thử từng giá trị
 OUT_DIR = os.path.join(os.path.dirname(__file__), "sweep_results")
 
@@ -41,10 +43,10 @@ def main():
         best_val_acc, best_epoch, history = train_one_config(
             trainable_iters=trainable_iters,
             n_epochs=100,
-            patience=8,
+            patience=20,
             verbose=True,
-            save_weights=True,  # Chưa lưu trọng số ở bước sweep - chỉ để chọn cấu hình
-            learning_rate=5e-4,
+            save_weights=False,  # Chưa lưu trọng số ở bước sweep - chỉ để chọn cấu hình
+            learning_rate=5e-3,
         )
 
         results.append(
