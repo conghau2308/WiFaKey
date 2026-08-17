@@ -22,10 +22,10 @@ from train import train_one_config, ITERS_MAX
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 CANDIDATES = [
-    # 4,
+    4,
     # 8,
     # 12,
-    16,
+    # 16,
     # 20,
 ]  # số vòng lặp cuối được phép fine-tune, thử từng giá trị
 OUT_DIR = os.path.join(os.path.dirname(__file__), "sweep_results")
@@ -46,7 +46,7 @@ def main():
             patience=20,
             verbose=True,
             save_weights=False,  # Chưa lưu trọng số ở bước sweep - chỉ để chọn cấu hình
-            learning_rate=5e-3,
+            learning_rate=1e-3,
         )
 
         results.append(

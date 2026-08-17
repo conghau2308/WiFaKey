@@ -1,0 +1,24 @@
+// File này định nghĩa "hợp đồng" (interface) mà Swift và Kotlin sẽ thấy —
+// UniFFI đọc file này rồi TỰ SINH mã binding, bạn không viết JNI/Obj-C++ tay.
+//
+// Đây là bản demo tối thiểu, tương ứng hàm version() trong lib.rs.
+// Khi bạn ghép xong enroll()/verify() thật, thêm dictionary + function
+// tương ứng ở đây, UniFFI sẽ tự sinh lại binding — xem README.md mục
+// "Bước 5" để biết lệnh chạy.
+
+namespace wifakey_core {
+  string version();
+};
+
+// Ví dụ hình dạng cho enroll() thật sự sau này (chưa implement, để tham khảo):
+//
+// dictionary EnrollResult {
+//   bytes helper_data;
+//   bytes mask;
+//   bytes key_hash;
+// };
+//
+// namespace wifakey_core {
+//   [Throws=WifakeyError]
+//   EnrollResult enroll(bytes embedding, bytes user_secret, bytes service_salt);
+// };

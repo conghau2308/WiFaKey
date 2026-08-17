@@ -1,0 +1,2 @@
+model_checkpoint_path: "C:\\Users\\vooco\\Documents\\DACN_251\\WiFaKey-main\\WiFaKey-main\\research\\commitment\\weights\\embedding_denoiser_model"
+all_model_checkpoint_paths: "C:\\Users\\vooco\\Documents\\DACN_251\\WiFaKey-main\\WiFaKey-main\\research\\commitment\\weights\\embedding_denoiser_model"

@@ -6,5 +6,1201 @@
   "FAR_cross": 7.471049682480388e-05,
   "FAR_combined": 0.00010840108401084011,
   "impostor_success_same": 1,
-  "impostor_success_cross": 1
+  "impostor_success_cross": 1,
+  "flagged_genuine": [
+    {
+      "identity_a": "able_wanamakok",
+      "cache_a": "able_wanamakok_0015.npy",
+      "identity_b": "able_wanamakok",
+      "cache_b": "able_wanamakok_0041.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "able_wanamakok",
+      "cache_a": "able_wanamakok_0027.npy",
+      "identity_b": "able_wanamakok",
+      "cache_b": "able_wanamakok_0041.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "able_wanamakok",
+      "cache_a": "able_wanamakok_0012.npy",
+      "identity_b": "able_wanamakok",
+      "cache_b": "able_wanamakok_0024.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "able_wanamakok",
+      "cache_a": "able_wanamakok_0015.npy",
+      "identity_b": "able_wanamakok",
+      "cache_b": "able_wanamakok_0056.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "able_wanamakok",
+      "cache_a": "able_wanamakok_0012.npy",
+      "identity_b": "able_wanamakok",
+      "cache_b": "able_wanamakok_0015.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "able_wanamakok",
+      "cache_a": "able_wanamakok_0025.npy",
+      "identity_b": "able_wanamakok",
+      "cache_b": "able_wanamakok_0041.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "able_wanamakok",
+      "cache_a": "able_wanamakok_0012.npy",
+      "identity_b": "able_wanamakok",
+      "cache_b": "able_wanamakok_0027.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "aubrey_anderson-emmons",
+      "cache_a": "aubrey_anderson-emmons_0001.npy",
+      "identity_b": "aubrey_anderson-emmons",
+      "cache_b": "aubrey_anderson-emmons_0015.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "fala_chen",
+      "cache_a": "fala_chen_0063.npy",
+      "identity_b": "fala_chen",
+      "cache_b": "fala_chen_0069.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "gong_seung_yeon",
+      "cache_a": "gong_seung_yeon_0036.npy",
+      "identity_b": "gong_seung_yeon",
+      "cache_b": "gong_seung_yeon_0057.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "jinny_ng",
+      "cache_a": "jinny_ng_0048.npy",
+      "identity_b": "jinny_ng",
+      "cache_b": "jinny_ng_0049.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "jinny_ng",
+      "cache_a": "jinny_ng_0020.npy",
+      "identity_b": "jinny_ng",
+      "cache_b": "jinny_ng_0049.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "jinny_ng",
+      "cache_a": "jinny_ng_0020.npy",
+      "identity_b": "jinny_ng",
+      "cache_b": "jinny_ng_0055.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "jinny_ng",
+      "cache_a": "jinny_ng_0020.npy",
+      "identity_b": "jinny_ng",
+      "cache_b": "jinny_ng_0027.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "jinny_ng",
+      "cache_a": "jinny_ng_0020.npy",
+      "identity_b": "jinny_ng",
+      "cache_b": "jinny_ng_0024.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "minori_chihara",
+      "cache_a": "minori_chihara_0031.npy",
+      "identity_b": "minori_chihara",
+      "cache_b": "minori_chihara_0049.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "minori_chihara",
+      "cache_a": "minori_chihara_0039.npy",
+      "identity_b": "minori_chihara",
+      "cache_b": "minori_chihara_0043.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "minori_chihara",
+      "cache_a": "minori_chihara_0019.npy",
+      "identity_b": "minori_chihara",
+      "cache_b": "minori_chihara_0043.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "minori_chihara",
+      "cache_a": "minori_chihara_0044.npy",
+      "identity_b": "minori_chihara",
+      "cache_b": "minori_chihara_0046.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "minori_chihara",
+      "cache_a": "minori_chihara_0031.npy",
+      "identity_b": "minori_chihara",
+      "cache_b": "minori_chihara_0046.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "puff_guo",
+      "cache_a": "puff_guo_0013.npy",
+      "identity_b": "puff_guo",
+      "cache_b": "puff_guo_0036.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "puff_guo",
+      "cache_a": "puff_guo_0007.npy",
+      "identity_b": "puff_guo",
+      "cache_b": "puff_guo_0052.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "puff_guo",
+      "cache_a": "puff_guo_0005.npy",
+      "identity_b": "puff_guo",
+      "cache_b": "puff_guo_0025.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "puff_guo",
+      "cache_a": "puff_guo_0005.npy",
+      "identity_b": "puff_guo",
+      "cache_b": "puff_guo_0007.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "sumetal",
+      "cache_a": "sumetal_0012.npy",
+      "identity_b": "sumetal",
+      "cache_b": "sumetal_0047.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "sumetal",
+      "cache_a": "sumetal_0010.npy",
+      "identity_b": "sumetal",
+      "cache_b": "sumetal_0054.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "sumetal",
+      "cache_a": "sumetal_0040.npy",
+      "identity_b": "sumetal",
+      "cache_b": "sumetal_0047.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "sumetal",
+      "cache_a": "sumetal_0054.npy",
+      "identity_b": "sumetal",
+      "cache_b": "sumetal_0055.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "xu_jinglei",
+      "cache_a": "xu_jinglei_0012.npy",
+      "identity_b": "xu_jinglei",
+      "cache_b": "xu_jinglei_0015.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "xu_jinglei",
+      "cache_a": "xu_jinglei_0001.npy",
+      "identity_b": "xu_jinglei",
+      "cache_b": "xu_jinglei_0036.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "xu_jinglei",
+      "cache_a": "xu_jinglei_0015.npy",
+      "identity_b": "xu_jinglei",
+      "cache_b": "xu_jinglei_0041.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "godfrey_gao",
+      "cache_a": "godfrey_gao_0002.npy",
+      "identity_b": "godfrey_gao",
+      "cache_b": "godfrey_gao_0004.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "hiroki_narimiya",
+      "cache_a": "hiroki_narimiya_0051.npy",
+      "identity_b": "hiroki_narimiya",
+      "cache_b": "hiroki_narimiya_0058.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "hiroki_narimiya",
+      "cache_a": "hiroki_narimiya_0039.npy",
+      "identity_b": "hiroki_narimiya",
+      "cache_b": "hiroki_narimiya_0074.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "hiroki_narimiya",
+      "cache_a": "hiroki_narimiya_0026.npy",
+      "identity_b": "hiroki_narimiya",
+      "cache_b": "hiroki_narimiya_0076.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "ji_chang_wook",
+      "cache_a": "ji_chang_wook_0005.npy",
+      "identity_b": "ji_chang_wook",
+      "cache_b": "ji_chang_wook_0037.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "ji_chang_wook",
+      "cache_a": "ji_chang_wook_0005.npy",
+      "identity_b": "ji_chang_wook",
+      "cache_b": "ji_chang_wook_0046.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "ji_chang_wook",
+      "cache_a": "ji_chang_wook_0002.npy",
+      "identity_b": "ji_chang_wook",
+      "cache_b": "ji_chang_wook_0046.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "kazuya_kamenashi",
+      "cache_a": "kazuya_kamenashi_0054.npy",
+      "identity_b": "kazuya_kamenashi",
+      "cache_b": "kazuya_kamenashi_0061.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "will_yun_lee",
+      "cache_a": "will_yun_lee_0510.npy",
+      "identity_b": "will_yun_lee",
+      "cache_b": "will_yun_lee_0570.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "will_yun_lee",
+      "cache_a": "will_yun_lee_0510.npy",
+      "identity_b": "will_yun_lee",
+      "cache_b": "will_yun_lee_0920.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "will_yun_lee",
+      "cache_a": "will_yun_lee_0570.npy",
+      "identity_b": "will_yun_lee",
+      "cache_b": "will_yun_lee_0669.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "eva_marcille",
+      "cache_a": "eva_marcille_0014.npy",
+      "identity_b": "eva_marcille",
+      "cache_b": "eva_marcille_0025.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "eva_marcille",
+      "cache_a": "eva_marcille_0025.npy",
+      "identity_b": "eva_marcille",
+      "cache_b": "eva_marcille_0045.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "eva_marcille",
+      "cache_a": "eva_marcille_0025.npy",
+      "identity_b": "eva_marcille",
+      "cache_b": "eva_marcille_0029.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "jaida-iman_benjamin",
+      "cache_a": "jaida-iman_benjamin_0018.npy",
+      "identity_b": "jaida-iman_benjamin",
+      "cache_b": "jaida-iman_benjamin_0077.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "judith_shekoni",
+      "cache_a": "judith_shekoni_0001.npy",
+      "identity_b": "judith_shekoni",
+      "cache_b": "judith_shekoni_0020.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "judith_shekoni",
+      "cache_a": "judith_shekoni_0020.npy",
+      "identity_b": "judith_shekoni",
+      "cache_b": "judith_shekoni_0060.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "lupita_nyong'o",
+      "cache_a": "lupita_nyong'o_0021.npy",
+      "identity_b": "lupita_nyong'o",
+      "cache_b": "lupita_nyong'o_0061.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "sanaa_lathan",
+      "cache_a": "sanaa_lathan_0052.npy",
+      "identity_b": "sanaa_lathan",
+      "cache_b": "sanaa_lathan_0109.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "selita_ebanks",
+      "cache_a": "selita_ebanks_0052.npy",
+      "identity_b": "selita_ebanks",
+      "cache_b": "selita_ebanks_0056.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "selita_ebanks",
+      "cache_a": "selita_ebanks_0051.npy",
+      "identity_b": "selita_ebanks",
+      "cache_b": "selita_ebanks_0056.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "sharon_leal",
+      "cache_a": "sharon_leal_0018.npy",
+      "identity_b": "sharon_leal",
+      "cache_b": "sharon_leal_0089.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "tamala_jones",
+      "cache_a": "tamala_jones_0050.npy",
+      "identity_b": "tamala_jones",
+      "cache_b": "tamala_jones_0059.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "tamala_jones",
+      "cache_a": "tamala_jones_0014.npy",
+      "identity_b": "tamala_jones",
+      "cache_b": "tamala_jones_0016.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "tamala_jones",
+      "cache_a": "tamala_jones_0034.npy",
+      "identity_b": "tamala_jones",
+      "cache_b": "tamala_jones_0059.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "thandie_newton",
+      "cache_a": "thandie_newton_0051.npy",
+      "identity_b": "thandie_newton",
+      "cache_b": "thandie_newton_0146.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "thandie_newton",
+      "cache_a": "thandie_newton_0031.npy",
+      "identity_b": "thandie_newton",
+      "cache_b": "thandie_newton_0066.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "thandie_newton",
+      "cache_a": "thandie_newton_0026.npy",
+      "identity_b": "thandie_newton",
+      "cache_b": "thandie_newton_0031.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "thandie_newton",
+      "cache_a": "thandie_newton_0031.npy",
+      "identity_b": "thandie_newton",
+      "cache_b": "thandie_newton_0051.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "yvette_nicole_brown",
+      "cache_a": "yvette_nicole_brown_0015.npy",
+      "identity_b": "yvette_nicole_brown",
+      "cache_b": "yvette_nicole_brown_0020.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "andre_braugher",
+      "cache_a": "andre_braugher_0001.npy",
+      "identity_b": "andre_braugher",
+      "cache_b": "andre_braugher_0031.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "andre_braugher",
+      "cache_a": "andre_braugher_0031.npy",
+      "identity_b": "andre_braugher",
+      "cache_b": "andre_braugher_0085.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "andre_braugher",
+      "cache_a": "andre_braugher_0013.npy",
+      "identity_b": "andre_braugher",
+      "cache_b": "andre_braugher_0031.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "david_alan_grier",
+      "cache_a": "david_alan_grier_0020.npy",
+      "identity_b": "david_alan_grier",
+      "cache_b": "david_alan_grier_0050.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "kyle_massey",
+      "cache_a": "kyle_massey_0008.npy",
+      "identity_b": "kyle_massey",
+      "cache_b": "kyle_massey_0012.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "kyle_massey",
+      "cache_a": "kyle_massey_0008.npy",
+      "identity_b": "kyle_massey",
+      "cache_b": "kyle_massey_0051.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "kyle_massey",
+      "cache_a": "kyle_massey_0008.npy",
+      "identity_b": "kyle_massey",
+      "cache_b": "kyle_massey_0024.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "kyle_massey",
+      "cache_a": "kyle_massey_0046.npy",
+      "identity_b": "kyle_massey",
+      "cache_b": "kyle_massey_0051.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "kyle_massey",
+      "cache_a": "kyle_massey_0012.npy",
+      "identity_b": "kyle_massey",
+      "cache_b": "kyle_massey_0051.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "kyle_massey",
+      "cache_a": "kyle_massey_0025.npy",
+      "identity_b": "kyle_massey",
+      "cache_b": "kyle_massey_0051.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "marlon_wayans",
+      "cache_a": "marlon_wayans_0066.npy",
+      "identity_b": "marlon_wayans",
+      "cache_b": "marlon_wayans_0079.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "mos_def",
+      "cache_a": "mos_def_0011.npy",
+      "identity_b": "mos_def",
+      "cache_b": "mos_def_0029.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "mos_def",
+      "cache_a": "mos_def_0035.npy",
+      "identity_b": "mos_def",
+      "cache_b": "mos_def_0046.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "mos_def",
+      "cache_a": "mos_def_0029.npy",
+      "identity_b": "mos_def",
+      "cache_b": "mos_def_0041.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "todd_bridges",
+      "cache_a": "todd_bridges_0015.npy",
+      "identity_b": "todd_bridges",
+      "cache_b": "todd_bridges_0043.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "tyler_perry",
+      "cache_a": "tyler_perry_0053.npy",
+      "identity_b": "tyler_perry",
+      "cache_b": "tyler_perry_0079.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "tyler_perry",
+      "cache_a": "tyler_perry_0070.npy",
+      "identity_b": "tyler_perry",
+      "cache_b": "tyler_perry_0079.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "tyler_perry",
+      "cache_a": "tyler_perry_0079.npy",
+      "identity_b": "tyler_perry",
+      "cache_b": "tyler_perry_0103.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "bailee_madison",
+      "cache_a": "bailee_madison_0034.npy",
+      "identity_b": "bailee_madison",
+      "cache_b": "bailee_madison_0040.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "bailee_madison",
+      "cache_a": "bailee_madison_0033.npy",
+      "identity_b": "bailee_madison",
+      "cache_b": "bailee_madison_0034.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "bailee_madison",
+      "cache_a": "bailee_madison_0034.npy",
+      "identity_b": "bailee_madison",
+      "cache_b": "bailee_madison_0053.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "beth_riesgraf",
+      "cache_a": "beth_riesgraf_0001.npy",
+      "identity_b": "beth_riesgraf",
+      "cache_b": "beth_riesgraf_0049.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "beth_riesgraf",
+      "cache_a": "beth_riesgraf_0016.npy",
+      "identity_b": "beth_riesgraf",
+      "cache_b": "beth_riesgraf_0054.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "beth_riesgraf",
+      "cache_a": "beth_riesgraf_0053.npy",
+      "identity_b": "beth_riesgraf",
+      "cache_b": "beth_riesgraf_0054.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "beth_riesgraf",
+      "cache_a": "beth_riesgraf_0049.npy",
+      "identity_b": "beth_riesgraf",
+      "cache_b": "beth_riesgraf_0054.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "beth_riesgraf",
+      "cache_a": "beth_riesgraf_0049.npy",
+      "identity_b": "beth_riesgraf",
+      "cache_b": "beth_riesgraf_0053.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "beth_riesgraf",
+      "cache_a": "beth_riesgraf_0016.npy",
+      "identity_b": "beth_riesgraf",
+      "cache_b": "beth_riesgraf_0049.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "beth_riesgraf",
+      "cache_a": "beth_riesgraf_0016.npy",
+      "identity_b": "beth_riesgraf",
+      "cache_b": "beth_riesgraf_0053.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "bryce_dallas_howard",
+      "cache_a": "bryce_dallas_howard_0028.npy",
+      "identity_b": "bryce_dallas_howard",
+      "cache_b": "bryce_dallas_howard_0042.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "fairuza_balk",
+      "cache_a": "fairuza_balk_0039.npy",
+      "identity_b": "fairuza_balk",
+      "cache_b": "fairuza_balk_0063.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "fairuza_balk",
+      "cache_a": "fairuza_balk_0039.npy",
+      "identity_b": "fairuza_balk",
+      "cache_b": "fairuza_balk_0071.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "fairuza_balk",
+      "cache_a": "fairuza_balk_0039.npy",
+      "identity_b": "fairuza_balk",
+      "cache_b": "fairuza_balk_0073.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "fairuza_balk",
+      "cache_a": "fairuza_balk_0007.npy",
+      "identity_b": "fairuza_balk",
+      "cache_b": "fairuza_balk_0039.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "gabrielle_anwar",
+      "cache_a": "gabrielle_anwar_0023.npy",
+      "identity_b": "gabrielle_anwar",
+      "cache_b": "gabrielle_anwar_0175.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "gabrielle_anwar",
+      "cache_a": "gabrielle_anwar_0003.npy",
+      "identity_b": "gabrielle_anwar",
+      "cache_b": "gabrielle_anwar_0023.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "gabrielle_anwar",
+      "cache_a": "gabrielle_anwar_0078.npy",
+      "identity_b": "gabrielle_anwar",
+      "cache_b": "gabrielle_anwar_0175.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "gabrielle_anwar",
+      "cache_a": "gabrielle_anwar_0175.npy",
+      "identity_b": "gabrielle_anwar",
+      "cache_b": "gabrielle_anwar_0194.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "gabrielle_anwar",
+      "cache_a": "gabrielle_anwar_0027.npy",
+      "identity_b": "gabrielle_anwar",
+      "cache_b": "gabrielle_anwar_0042.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "gabrielle_anwar",
+      "cache_a": "gabrielle_anwar_0027.npy",
+      "identity_b": "gabrielle_anwar",
+      "cache_b": "gabrielle_anwar_0104.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "helen_hunt",
+      "cache_a": "helen_hunt_0212.npy",
+      "identity_b": "helen_hunt",
+      "cache_b": "helen_hunt_0249.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "jennifer_grey",
+      "cache_a": "jennifer_grey_0082.npy",
+      "identity_b": "jennifer_grey",
+      "cache_b": "jennifer_grey_0092.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "jennifer_grey",
+      "cache_a": "jennifer_grey_0092.npy",
+      "identity_b": "jennifer_grey",
+      "cache_b": "jennifer_grey_0107.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "jennifer_grey",
+      "cache_a": "jennifer_grey_0082.npy",
+      "identity_b": "jennifer_grey",
+      "cache_b": "jennifer_grey_0107.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "joey_lauren_adams",
+      "cache_a": "joey_lauren_adams_0013.npy",
+      "identity_b": "joey_lauren_adams",
+      "cache_b": "joey_lauren_adams_0026.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "joey_lauren_adams",
+      "cache_a": "joey_lauren_adams_0025.npy",
+      "identity_b": "joey_lauren_adams",
+      "cache_b": "joey_lauren_adams_0043.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "joey_lauren_adams",
+      "cache_a": "joey_lauren_adams_0026.npy",
+      "identity_b": "joey_lauren_adams",
+      "cache_b": "joey_lauren_adams_0043.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "joey_lauren_adams",
+      "cache_a": "joey_lauren_adams_0013.npy",
+      "identity_b": "joey_lauren_adams",
+      "cache_b": "joey_lauren_adams_0025.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "joey_lauren_adams",
+      "cache_a": "joey_lauren_adams_0025.npy",
+      "identity_b": "joey_lauren_adams",
+      "cache_b": "joey_lauren_adams_0026.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "joey_lauren_adams",
+      "cache_a": "joey_lauren_adams_0015.npy",
+      "identity_b": "joey_lauren_adams",
+      "cache_b": "joey_lauren_adams_0026.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "katie_cassidy",
+      "cache_a": "katie_cassidy_0029.npy",
+      "identity_b": "katie_cassidy",
+      "cache_b": "katie_cassidy_0144.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "laura_vandervoort",
+      "cache_a": "laura_vandervoort_0072.npy",
+      "identity_b": "laura_vandervoort",
+      "cache_b": "laura_vandervoort_0119.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "linda_gray",
+      "cache_a": "linda_gray_0006.npy",
+      "identity_b": "linda_gray",
+      "cache_b": "linda_gray_0017.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "melanie_lynskey",
+      "cache_a": "melanie_lynskey_0038.npy",
+      "identity_b": "melanie_lynskey",
+      "cache_b": "melanie_lynskey_0090.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "melanie_lynskey",
+      "cache_a": "melanie_lynskey_0090.npy",
+      "identity_b": "melanie_lynskey",
+      "cache_b": "melanie_lynskey_0091.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "melanie_lynskey",
+      "cache_a": "melanie_lynskey_0088.npy",
+      "identity_b": "melanie_lynskey",
+      "cache_b": "melanie_lynskey_0090.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "melinda_clarke",
+      "cache_a": "melinda_clarke_0041.npy",
+      "identity_b": "melinda_clarke",
+      "cache_b": "melinda_clarke_0076.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "melinda_clarke",
+      "cache_a": "melinda_clarke_0039.npy",
+      "identity_b": "melinda_clarke",
+      "cache_b": "melinda_clarke_0041.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "michelle_trachtenberg",
+      "cache_a": "michelle_trachtenberg_0258.npy",
+      "identity_b": "michelle_trachtenberg",
+      "cache_b": "michelle_trachtenberg_0324.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "michelle_trachtenberg",
+      "cache_a": "michelle_trachtenberg_0258.npy",
+      "identity_b": "michelle_trachtenberg",
+      "cache_b": "michelle_trachtenberg_0339.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "odette_annable",
+      "cache_a": "odette_annable_0053.npy",
+      "identity_b": "odette_annable",
+      "cache_b": "odette_annable_0060.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "odette_annable",
+      "cache_a": "odette_annable_0053.npy",
+      "identity_b": "odette_annable",
+      "cache_b": "odette_annable_0128.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "odette_annable",
+      "cache_a": "odette_annable_0060.npy",
+      "identity_b": "odette_annable",
+      "cache_b": "odette_annable_0128.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "terri_ivens",
+      "cache_a": "terri_ivens_0016.npy",
+      "identity_b": "terri_ivens",
+      "cache_b": "terri_ivens_0076.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "terri_ivens",
+      "cache_a": "terri_ivens_0001.npy",
+      "identity_b": "terri_ivens",
+      "cache_b": "terri_ivens_0076.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "terri_ivens",
+      "cache_a": "terri_ivens_0001.npy",
+      "identity_b": "terri_ivens",
+      "cache_b": "terri_ivens_0011.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "terri_ivens",
+      "cache_a": "terri_ivens_0011.npy",
+      "identity_b": "terri_ivens",
+      "cache_b": "terri_ivens_0016.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "terri_ivens",
+      "cache_a": "terri_ivens_0001.npy",
+      "identity_b": "terri_ivens",
+      "cache_b": "terri_ivens_0016.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "terri_ivens",
+      "cache_a": "terri_ivens_0016.npy",
+      "identity_b": "terri_ivens",
+      "cache_b": "terri_ivens_0031.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "valeria_golino",
+      "cache_a": "valeria_golino_0013.npy",
+      "identity_b": "valeria_golino",
+      "cache_b": "valeria_golino_0025.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "chad_rook",
+      "cache_a": "chad_rook_0029.npy",
+      "identity_b": "chad_rook",
+      "cache_b": "chad_rook_0062.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "chad_rook",
+      "cache_a": "chad_rook_0002.npy",
+      "identity_b": "chad_rook",
+      "cache_b": "chad_rook_0029.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "colin_ferguson",
+      "cache_a": "colin_ferguson_0001.npy",
+      "identity_b": "colin_ferguson",
+      "cache_b": "colin_ferguson_0094.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "damian_lewis",
+      "cache_a": "damian_lewis_0084.npy",
+      "identity_b": "damian_lewis",
+      "cache_b": "damian_lewis_0117.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "david_strathairn",
+      "cache_a": "david_strathairn_0065.npy",
+      "identity_b": "david_strathairn",
+      "cache_b": "david_strathairn_0083.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "david_strathairn",
+      "cache_a": "david_strathairn_0065.npy",
+      "identity_b": "david_strathairn",
+      "cache_b": "david_strathairn_0102.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "david_strathairn",
+      "cache_a": "david_strathairn_0062.npy",
+      "identity_b": "david_strathairn",
+      "cache_b": "david_strathairn_0083.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "david_strathairn",
+      "cache_a": "david_strathairn_0075.npy",
+      "identity_b": "david_strathairn",
+      "cache_b": "david_strathairn_0102.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "donal_logue",
+      "cache_a": "donal_logue_0028.npy",
+      "identity_b": "donal_logue",
+      "cache_b": "donal_logue_0062.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "eddie_cibrian",
+      "cache_a": "eddie_cibrian_0014.npy",
+      "identity_b": "eddie_cibrian",
+      "cache_b": "eddie_cibrian_0019.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "federico_dordei",
+      "cache_a": "federico_dordei_0036.npy",
+      "identity_b": "federico_dordei",
+      "cache_b": "federico_dordei_0081.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "federico_dordei",
+      "cache_a": "federico_dordei_0032.npy",
+      "identity_b": "federico_dordei",
+      "cache_b": "federico_dordei_0063.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "federico_dordei",
+      "cache_a": "federico_dordei_0036.npy",
+      "identity_b": "federico_dordei",
+      "cache_b": "federico_dordei_0063.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "federico_dordei",
+      "cache_a": "federico_dordei_0013.npy",
+      "identity_b": "federico_dordei",
+      "cache_b": "federico_dordei_0030.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "josh_holloway",
+      "cache_a": "josh_holloway_0011.npy",
+      "identity_b": "josh_holloway",
+      "cache_b": "josh_holloway_0081.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "josh_holloway",
+      "cache_a": "josh_holloway_0007.npy",
+      "identity_b": "josh_holloway",
+      "cache_b": "josh_holloway_0079.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "josh_holloway",
+      "cache_a": "josh_holloway_0056.npy",
+      "identity_b": "josh_holloway",
+      "cache_b": "josh_holloway_0081.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "judge_reinhold",
+      "cache_a": "judge_reinhold_0012.npy",
+      "identity_b": "judge_reinhold",
+      "cache_b": "judge_reinhold_0053.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "judge_reinhold",
+      "cache_a": "judge_reinhold_0022.npy",
+      "identity_b": "judge_reinhold",
+      "cache_b": "judge_reinhold_0058.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "judge_reinhold",
+      "cache_a": "judge_reinhold_0022.npy",
+      "identity_b": "judge_reinhold",
+      "cache_b": "judge_reinhold_0053.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "judge_reinhold",
+      "cache_a": "judge_reinhold_0012.npy",
+      "identity_b": "judge_reinhold",
+      "cache_b": "judge_reinhold_0058.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "manu_bennett",
+      "cache_a": "manu_bennett_0061.npy",
+      "identity_b": "manu_bennett",
+      "cache_b": "manu_bennett_0068.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "manu_bennett",
+      "cache_a": "manu_bennett_0061.npy",
+      "identity_b": "manu_bennett",
+      "cache_b": "manu_bennett_0065.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "mark_strong",
+      "cache_a": "mark_strong_0015.npy",
+      "identity_b": "mark_strong",
+      "cache_b": "mark_strong_0082.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "michael_sheen",
+      "cache_a": "michael_sheen_0007.npy",
+      "identity_b": "michael_sheen",
+      "cache_b": "michael_sheen_0044.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "michael_sheen",
+      "cache_a": "michael_sheen_0007.npy",
+      "identity_b": "michael_sheen",
+      "cache_b": "michael_sheen_0164.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "robert_zemeckis",
+      "cache_a": "robert_zemeckis_0021.npy",
+      "identity_b": "robert_zemeckis",
+      "cache_b": "robert_zemeckis_0058.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "robert_zemeckis",
+      "cache_a": "robert_zemeckis_0001.npy",
+      "identity_b": "robert_zemeckis",
+      "cache_b": "robert_zemeckis_0027.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "robert_zemeckis",
+      "cache_a": "robert_zemeckis_0002.npy",
+      "identity_b": "robert_zemeckis",
+      "cache_b": "robert_zemeckis_0058.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "robert_zemeckis",
+      "cache_a": "robert_zemeckis_0027.npy",
+      "identity_b": "robert_zemeckis",
+      "cache_b": "robert_zemeckis_0058.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "robert_zemeckis",
+      "cache_a": "robert_zemeckis_0021.npy",
+      "identity_b": "robert_zemeckis",
+      "cache_b": "robert_zemeckis_0027.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "robert_zemeckis",
+      "cache_a": "robert_zemeckis_0003.npy",
+      "identity_b": "robert_zemeckis",
+      "cache_b": "robert_zemeckis_0058.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "robert_zemeckis",
+      "cache_a": "robert_zemeckis_0001.npy",
+      "identity_b": "robert_zemeckis",
+      "cache_b": "robert_zemeckis_0058.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "roberto_lombardi",
+      "cache_a": "roberto_lombardi_0028.npy",
+      "identity_b": "roberto_lombardi",
+      "cache_b": "roberto_lombardi_0069.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "roberto_lombardi",
+      "cache_a": "roberto_lombardi_0047.npy",
+      "identity_b": "roberto_lombardi",
+      "cache_b": "roberto_lombardi_0069.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "roberto_lombardi",
+      "cache_a": "roberto_lombardi_0034.npy",
+      "identity_b": "roberto_lombardi",
+      "cache_b": "roberto_lombardi_0069.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "sendhil_ramamurthy",
+      "cache_a": "sendhil_ramamurthy_0008.npy",
+      "identity_b": "sendhil_ramamurthy",
+      "cache_b": "sendhil_ramamurthy_0043.npy",
+      "verify_result": false
+    },
+    {
+      "identity_a": "sendhil_ramamurthy",
+      "cache_a": "sendhil_ramamurthy_0008.npy",
+      "identity_b": "sendhil_ramamurthy",
+      "cache_b": "sendhil_ramamurthy_0031.npy",
+      "verify_result": false
+    }
+  ],
+  "flagged_impostor_same": [
+    {
+      "identity_a": "david_oyelowo",
+      "cache_a": "david_oyelowo_0247.npy",
+      "identity_b": "mos_def",
+      "cache_b": "mos_def_0046.npy",
+      "verify_result": true
+    }
+  ],
+  "flagged_impostor_cross": [
+    {
+      "identity_a": "gong_seung_yeon",
+      "cache_a": "gong_seung_yeon_0019.npy",
+      "identity_b": "todd_bridges",
+      "cache_b": "todd_bridges_0009.npy",
+      "verify_result": true
+    }
+  ]
 }

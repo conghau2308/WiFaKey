@@ -2,12 +2,12 @@
 run_multisample_benchmark.py
 
 Benchmark thật (qua Neural-MS decode) cho majority-vote enrollment (C.2)
-trên DemogPairs, đọc multisample_K{K}_genuine.csv / _impostor.csv (sinh bởi
-build_multisample_pairs_demogpairs.py).
+trên ytf, đọc multisample_K{K}_genuine.csv / _impostor.csv (sinh bởi
+build_multisample_pairs_ytf.py).
 
 QUAN TRỌNG — thiết kế để so sánh CÔNG BẰNG, không lẫn với số 42.45% đo trên
 LFW (khác dataset/domain): script này chạy CẢ 2 chế độ trên CÙNG 1 tập dữ
-liệu DemogPairs vừa build:
+liệu ytf vừa build:
   --mode vote   : enroll bằng majority-vote trên K ảnh (MultisampleWiFaKeyHandler)
   --mode single : enroll CHỈ bằng 1 ảnh đầu tiên trong K ảnh đó (bỏ qua vote)
                   -> đây là baseline "không multisample" nhưng cùng identity,
@@ -39,7 +39,7 @@ import numpy as np
 
 from research.commitment.v1_multisample import MultisampleWiFaKeyHandler
 
-IMPOSTOR_PER_GENUINE = 20 # điều chỉnh con số này cho đúng với file build_multisample_pairs_demogpairs.py (để dễ traceback)
+IMPOSTOR_PER_GENUINE = 1 # điều chỉnh con số này cho đúng với file build_multisample_pairs_ytf.py (để dễ traceback)
 
 def load_embedding(cache_dir: str, cache_filename: str) -> np.ndarray:
     return np.load(os.path.join(cache_dir, cache_filename))
@@ -118,12 +118,12 @@ def main():
     ap.add_argument(
         "--pairs-dir",
         default=None,
-        help="Mặc định: <project-root>/datasets/processed/demogpairs/pairs",
+        help="Mặc định: <project-root>/datasets/processed/ytf/pairs",
     )
     ap.add_argument(
         "--cache-dir",
         default=None,
-        help="Mặc định: <project-root>/datasets/processed/demogpairs/embeddings_cache",
+        help="Mặc định: <project-root>/datasets/processed/ytf/embeddings_cache",
     )
     ap.add_argument("--max-pairs", type=int, default=None)
     ap.add_argument("--force-cpu", action="store_true")
@@ -136,19 +136,19 @@ def main():
     root = os.path.abspath(args.project_root)
     data_dir = args.wifakey_data_dir or os.path.join(root, "wifakey_module", "data")
     pairs_dir = args.pairs_dir or os.path.join(
-        root, "datasets", "processed", "demogpairs", "pairs"
+        root, "datasets", "processed", "ytf", "pairs"
     )
     cache_dir = args.cache_dir or os.path.join(
-        root, "datasets", "processed", "demogpairs", "embeddings_cache"
+        root, "datasets", "processed", "ytf", "embeddings_cache"
     )
     weights_path = os.path.join(data_dir, "Weights_Var_MS")
     biases_path = os.path.join(data_dir, "Biases_Var_MS")
 
     genuine_rows = load_rows(
-        os.path.join(pairs_dir, f"multisample_K{args.k}_genuine.csv")
+        os.path.join(pairs_dir, f"multisample_K{args.k}_strict15_genuine.csv")
     )
     impostor_rows = load_rows(
-        os.path.join(pairs_dir, f"multisample_K{args.k}_impostor.csv")
+        os.path.join(pairs_dir, f"multisample_K{args.k}_strict15_impostor.csv")
     )
     if args.max_pairs:
         genuine_rows = genuine_rows[: args.max_pairs]

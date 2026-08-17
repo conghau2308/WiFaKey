@@ -1,0 +1,51 @@
+<!-- CaptureView.xaml
+     Bố cục tương ứng CameraCaptureView.swift / CameraCaptureScreen.kt:
+     preview full màn hình + oval overlay (vẽ bằng Path, xem OvalGuide) +
+     status pill trên cùng + panel hướng dẫn dưới cùng, dùng
+     AcrylicBrush cho hiệu ứng mờ kính tương đương .ultraThinMaterial /
+     Material3 surface.
+-->
+<Page
+    x:Class="Wifakey.Capture.CaptureView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:media="using:Windows.Media.PlayTo">
+
+    <Grid>
+        <MediaPlayerElement x:Name="PreviewElement" Stretch="UniformToFill" />
+
+        <!-- Oval guide: dùng Path đơn giản, animation pulse có thể thêm qua
+             Storyboard trong Resources — lược bớt trong skeleton này -->
+        <Ellipse x:Name="OvalGuide"
+                 Width="260" Height="340"
+                 Stroke="White" StrokeThickness="3"
+                 HorizontalAlignment="Center" VerticalAlignment="Center"
+                 Fill="Transparent" />
+
+        <Grid Padding="16">
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top"
+                        Orientation="Horizontal" Spacing="8">
+                <Border Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                        CornerRadius="16" Padding="14,8">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Ellipse x:Name="StatusDot" Width="8" Height="8" Fill="Orange" />
+                        <TextBlock x:Name="StatusText" Text="Đang tìm khuôn mặt"
+                                   Foreground="White" FontWeight="Medium" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <Border Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                    CornerRadius="24" Padding="20"
+                    VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+                <StackPanel HorizontalAlignment="Center" Spacing="12">
+                    <TextBlock x:Name="InstructionText"
+                               Text="Đưa khuôn mặt vào khung hình"
+                               Foreground="White" TextAlignment="Center"
+                               TextWrapping="Wrap" FontSize="16" />
+                    <ProgressRing x:Name="ProcessingRing" Visibility="Collapsed" Foreground="White" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

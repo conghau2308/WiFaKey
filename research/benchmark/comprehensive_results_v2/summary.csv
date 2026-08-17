@@ -1,0 +1,21 @@
+Dataset,Method,GMR,FAR,Genuine Success,Genuine Total,Impostor Success,Impostor Total
+cplfw,margin_bpsk,77.74,0.0000,1317,1694,0,1742
+cplfw,margin_empirical,93.03,0.1722,1576,1694,3,1742
+cplfw,margin_empirical_lda,91.62,0.2296,1552,1694,4,1742
+cplfw,margin_empirical_multi,93.21,0.1722,1579,1694,3,1742
+cplfw,margin_empirical_multi_lda,92.33,0.2296,1564,1694,4,1742
+cplfw,random_bpsk,5.19,0.0000,88,1694,0,1742
+cplfw,random_bpsk_lda,6.43,0.0000,109,1694,0,1742
+cplfw,random_empirical,43.03,0.0000,729,1694,0,1742
+cplfw,random_empirical_lda,41.20,0.0000,698,1694,0,1742
+cplfw,random_empirical_multi,44.86,0.0000,760,1694,0,1742
+labeled_faces_in_the_wild,margin_bpsk,97.39,0.0000,858,881,0,835
+labeled_faces_in_the_wild,margin_empirical,97.73,0.0000,861,881,0,835
+labeled_faces_in_the_wild,margin_empirical_lda,97.73,0.0000,861,881,0,835
+labeled_faces_in_the_wild,margin_empirical_multi,97.73,0.0000,861,881,0,835
+labeled_faces_in_the_wild,margin_empirical_multi_lda,97.73,0.0000,861,881,0,835
+labeled_faces_in_the_wild,random_bpsk,42.68,0.0000,376,881,0,835
+labeled_faces_in_the_wild,random_bpsk_lda,42.11,0.0000,371,881,0,835
+labeled_faces_in_the_wild,random_empirical,88.08,0.0000,776,881,0,835
+labeled_faces_in_the_wild,random_empirical_lda,86.72,0.0000,764,881,0,835
+labeled_faces_in_the_wild,random_empirical_multi,89.67,0.0000,790,881,0,835

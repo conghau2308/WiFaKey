@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WifakeyApp (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WifakeyApp (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

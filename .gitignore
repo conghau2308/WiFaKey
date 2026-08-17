@@ -16,3 +16,11 @@ dist/
 
 **/embeddings_cache/*.npy
 datasets/raw/
+build-wifakey-core/wifakey-core/target/
+
+datasets/processed/*.npz
+datasets/processed/**/*.npz
+*.onnx
+*.npz
+datasets/processed/
+**/embeddings_cache_arcface/

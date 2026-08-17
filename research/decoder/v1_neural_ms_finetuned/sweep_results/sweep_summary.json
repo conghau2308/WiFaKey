@@ -1,6 +1,6 @@
 [
   {
-    "trainable_iters": 8,
+    "trainable_iters": 4,
     "best_val_acc": 0.9015151515151515,
     "best_epoch": -1
   }

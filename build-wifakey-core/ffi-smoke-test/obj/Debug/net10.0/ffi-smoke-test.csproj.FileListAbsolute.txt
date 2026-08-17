@@ -1,0 +1,15 @@
+C:\Users\vooco\Documents\DACN_251\WiFaKey-main\WiFaKey-main\build-wifakey-core\ffi-smoke-test\bin\Debug\net10.0\ffi-smoke-test.exe
+C:\Users\vooco\Documents\DACN_251\WiFaKey-main\WiFaKey-main\build-wifakey-core\ffi-smoke-test\bin\Debug\net10.0\ffi-smoke-test.deps.json
+C:\Users\vooco\Documents\DACN_251\WiFaKey-main\WiFaKey-main\build-wifakey-core\ffi-smoke-test\bin\Debug\net10.0\ffi-smoke-test.runtimeconfig.json
+C:\Users\vooco\Documents\DACN_251\WiFaKey-main\WiFaKey-main\build-wifakey-core\ffi-smoke-test\bin\Debug\net10.0\ffi-smoke-test.dll
+C:\Users\vooco\Documents\DACN_251\WiFaKey-main\WiFaKey-main\build-wifakey-core\ffi-smoke-test\bin\Debug\net10.0\ffi-smoke-test.pdb
+C:\Users\vooco\Documents\DACN_251\WiFaKey-main\WiFaKey-main\build-wifakey-core\ffi-smoke-test\obj\Debug\net10.0\ffi-smoke-test.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\vooco\Documents\DACN_251\WiFaKey-main\WiFaKey-main\build-wifakey-core\ffi-smoke-test\obj\Debug\net10.0\ffi-smoke-test.AssemblyInfoInputs.cache
+C:\Users\vooco\Documents\DACN_251\WiFaKey-main\WiFaKey-main\build-wifakey-core\ffi-smoke-test\obj\Debug\net10.0\ffi-smoke-test.AssemblyInfo.cs
+C:\Users\vooco\Documents\DACN_251\WiFaKey-main\WiFaKey-main\build-wifakey-core\ffi-smoke-test\obj\Debug\net10.0\ffi-smoke-test.csproj.CoreCompileInputs.cache
+C:\Users\vooco\Documents\DACN_251\WiFaKey-main\WiFaKey-main\build-wifakey-core\ffi-smoke-test\obj\Debug\net10.0\ffi-smoke-test.sourcelink.json
+C:\Users\vooco\Documents\DACN_251\WiFaKey-main\WiFaKey-main\build-wifakey-core\ffi-smoke-test\obj\Debug\net10.0\ffi-smoke-test.dll
+C:\Users\vooco\Documents\DACN_251\WiFaKey-main\WiFaKey-main\build-wifakey-core\ffi-smoke-test\obj\Debug\net10.0\refint\ffi-smoke-test.dll
+C:\Users\vooco\Documents\DACN_251\WiFaKey-main\WiFaKey-main\build-wifakey-core\ffi-smoke-test\obj\Debug\net10.0\ffi-smoke-test.pdb
+C:\Users\vooco\Documents\DACN_251\WiFaKey-main\WiFaKey-main\build-wifakey-core\ffi-smoke-test\obj\Debug\net10.0\ffi-smoke-test.genruntimeconfig.cache
+C:\Users\vooco\Documents\DACN_251\WiFaKey-main\WiFaKey-main\build-wifakey-core\ffi-smoke-test\obj\Debug\net10.0\ref\ffi-smoke-test.dll

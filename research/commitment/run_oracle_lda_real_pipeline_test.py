@@ -186,87 +186,52 @@ def run_benchmark(handler, pairs: list[Pair], expect_success: bool) -> dict:
     """
     n_total = len(pairs)
     n_verify_true = 0
+    flagged_pairs = []  # các cặp có kết quả KHÁC kỳ vọng — dùng để traceback
     _devnull = io.StringIO()
     for idx, p in enumerate(pairs, start=1):
         emb_a = load_embedding(p.cache_a)
         emb_b = load_embedding(p.cache_b)
-        # Chặn print("[WiFaKey] Verify SUCCESS/FAILED") của code gốc — chỉ
-        # tắt output console, KHÔNG đổi bất kỳ logic/kết quả nào bên trong.
         with contextlib.redirect_stdout(_devnull):
             helper_data, mask_r, key_hash = handler.enroll(emb_a)
             result = handler.verify(emb_b, helper_data, mask_r, key_hash)
         if result:
             n_verify_true += 1
 
+        # expect_success=True (genuine): fail bất thường là result=False -> false_reject
+        # expect_success=False (impostor): fail bất thường là result=True -> impostor_success
+        is_unexpected = result != expect_success
+        if is_unexpected:
+            flagged_pairs.append(
+                dict(
+                    identity_a=p.identity_a,
+                    cache_a=p.cache_a,
+                    identity_b=p.identity_b,
+                    cache_b=p.cache_b,
+                    verify_result=bool(result),
+                )
+            )
+
         if idx % 500 == 0 or idx == n_total:
             print(
-                f"    ... {idx}/{n_total} cặp (đang thấy {n_verify_true} verify()=True)"
+                f"    ... {idx}/{n_total} cặp (đang thấy {n_verify_true} verify()=True, "
+                f"{len(flagged_pairs)} bất thường)"
             )
 
     if expect_success:
         n_success = n_verify_true
         rate = n_success / n_total if n_total else float("nan")
-        return dict(n_total=n_total, n_success=n_success, FRR=1 - rate)
+        return dict(
+            n_total=n_total,
+            n_success=n_success,
+            FRR=1 - rate,
+            flagged_pairs=flagged_pairs,
+        )
     else:
         n_success = n_verify_true  # đây chính là impostor_success (false_accept)
         rate = n_success / n_total if n_total else float("nan")
-        return dict(n_total=n_total, n_success=n_success, FAR=rate)
-
-
-def main():
-    np.random.seed(GLOBAL_SEED)
-
-    print("[1/4] Dựng lại ĐÚNG split select/validate đã dùng ở oracle test...")
-    identity_to_fold = load_identity_fold_map()
-    _, validate_ids = build_select_validate_split(
-        identity_to_fold, SELECT_RATIO, SPLIT_SEED
-    )
-    print(f"  validate: {len(validate_ids)} identity")
-
-    print("\n[2/4] Load pairs (đã lọc theo validate_ids)...")
-    genuine_pairs = load_genuine_pairs(validate_ids)
-    impostor_same_pairs = load_impostor_pairs_same_fold(validate_ids)
-    impostor_cross_pairs = load_impostor_pairs_cross_fold(validate_ids)
-    print(
-        f"  genuine={len(genuine_pairs)} | impostor_same_fold={len(impostor_same_pairs)} "
-        f"| impostor_cross_fold={len(impostor_cross_pairs)}"
-    )
-
-
-def close_handler(handler, name: str):
-    """Đóng TF session + giải phóng tham chiếu Python trước khi tạo handler
-    tiếp theo — bắt buộc trên GPU yếu (VRAM thấp), vì __del__ dựa vào GC có
-    thể không chạy ngay lập tức nếu còn bất kỳ tham chiếu nào treo lại."""
-    import gc
-
-    print(f"  Đang đóng session của '{name}' để giải phóng GPU...")
-    try:
-        handler.sess.close()
-    except Exception as e:
-        print(f"  (cảnh báo khi đóng session: {e})")
-    del handler
-    gc.collect()
-
-
-def run_full_benchmark(
-    handler_name: str, handler, genuine_pairs, impostor_same_pairs, impostor_cross_pairs
-) -> dict:
-    print(f"\n--- {handler_name} ---")
-    gen_stats = run_benchmark(handler, genuine_pairs, expect_success=True)
-    same_stats = run_benchmark(handler, impostor_same_pairs, expect_success=False)
-    cross_stats = run_benchmark(handler, impostor_cross_pairs, expect_success=False)
-    combined_n = same_stats["n_total"] + cross_stats["n_total"]
-    combined_success = same_stats["n_success"] + cross_stats["n_success"]
-    return dict(
-        FRR=gen_stats["FRR"],
-        genuine_n=gen_stats["n_total"],
-        genuine_success=gen_stats["n_success"],
-        FAR_same=same_stats["FAR"],
-        FAR_cross=cross_stats["FAR"],
-        FAR_combined=combined_success / combined_n if combined_n else float("nan"),
-        impostor_success_same=same_stats["n_success"],
-        impostor_success_cross=cross_stats["n_success"],
-    )
+        return dict(
+            n_total=n_total, n_success=n_success, FAR=rate, flagged_pairs=flagged_pairs
+        )
 
 
 def close_handler(handler, name: str):
@@ -302,6 +267,9 @@ def run_full_benchmark(
         FAR_combined=combined_success / combined_n if combined_n else float("nan"),
         impostor_success_same=same_stats["n_success"],
         impostor_success_cross=cross_stats["n_success"],
+        flagged_genuine=gen_stats["flagged_pairs"],
+        flagged_impostor_same=same_stats["flagged_pairs"],
+        flagged_impostor_cross=cross_stats["flagged_pairs"],
     )
 
 
@@ -389,6 +357,62 @@ def run_compare():
     print("- FRR/FAR không đổi rõ rệt hoặc tệ hơn -> +2.8% separation ở mức")
     print("  continuous-embedding CHƯA sống sót qua decoder hiện tại -> muốn")
     print("  biết chắc cần thử retrain decoder trên phân phối bit mới.")
+
+    # ================================================================
+    # TRACEBACK: liệt kê cụ thể cặp nào lọt/fail, so overlap 2 handler
+    # ================================================================
+    def pair_key(fp: dict) -> tuple:
+        return (fp["identity_a"], fp["cache_a"], fp["identity_b"], fp["cache_b"])
+
+    print("\n" + "=" * 70)
+    print("CHI TIẾT CÁC CẶP BẤT THƯỜNG (impostor_success / false_reject)")
+    print("=" * 70)
+
+    for category in [
+        "flagged_impostor_same",
+        "flagged_impostor_cross",
+        "flagged_genuine",
+    ]:
+        label = {
+            "flagged_impostor_same": "IMPOSTOR_SUCCESS (same-fold)",
+            "flagged_impostor_cross": "IMPOSTOR_SUCCESS (cross-fold)",
+            "flagged_genuine": "FALSE_REJECT (genuine)",
+        }[category]
+        print(f"\n--- {label} ---")
+
+        base_flagged = {
+            pair_key(fp): fp for fp in results["baseline"].get(category, [])
+        }
+        lda_flagged = {
+            pair_key(fp): fp for fp in results["oracle_lda"].get(category, [])
+        }
+
+        only_base = set(base_flagged) - set(lda_flagged)
+        only_lda = set(lda_flagged) - set(base_flagged)
+        both = set(base_flagged) & set(lda_flagged)
+
+        print(f"  Chỉ baseline bị ({len(only_base)}):")
+        for k in only_base:
+            print(f"    {k[0]}/{k[1]}  <->  {k[2]}/{k[3]}")
+
+        print(f"  Chỉ oracle_lda bị ({len(only_lda)}):")
+        for k in only_lda:
+            print(f"    {k[0]}/{k[1]}  <->  {k[2]}/{k[3]}")
+
+        print(
+            f"  CẢ HAI cùng bị (giới hạn cấu trúc, không phụ thuộc M_matrix) ({len(both)}):"
+        )
+        for k in both:
+            print(f"    {k[0]}/{k[1]}  <->  {k[2]}/{k[3]}")
+
+    print("\nCÁCH ĐỌC PHẦN TRACEBACK:")
+    print("- 'CẢ HAI cùng bị' ở impostor_success -> đúng những cặp M_matrix nào")
+    print("  cũng không cứu được (kiểu Venus/Serena) -> giới hạn của bản thân")
+    print("  cặp danh tính đó, không phải lỗi của oracle_lda.")
+    print("- 'Chỉ oracle_lda bị' ở impostor_success -> ĐÁNG LO, oracle_lda tạo")
+    print("  ra lỗ hổng MỚI mà baseline không có -> cần xem lại.")
+    print("- 'Chỉ oracle_lda bị' ở FALSE_REJECT -> đây là cái giá FRR thật của")
+    print("  M_matrix mới, xem thử identity đó có đặc điểm gì chung không.")
 
 
 def main():

@@ -1,0 +1,13 @@
+Dataset,Method,GMR,FAR,Genuine Success,Genuine Total,Impostor Success,Impostor Total
+LFW,random_bpsk,41.77,0.0000,368,881,0,835
+LFW,random_empirical,86.83,0.0000,765,881,0,835
+LFW,random_empirical_multi,89.44,0.0000,788,881,0,835
+LFW,margin_bpsk,97.39,0.0000,858,881,0,835
+LFW,margin_empirical,97.73,0.0000,861,881,0,835
+LFW,margin_empirical_multi,97.73,0.0000,861,881,0,835
+CPLFW,random_bpsk,5.31,0.0000,90,1694,0,1742
+CPLFW,random_empirical,42.44,0.0000,719,1694,0,1742
+CPLFW,random_empirical_multi,44.04,0.0000,746,1694,0,1742
+CPLFW,margin_bpsk,77.74,0.0000,1317,1694,0,1742
+CPLFW,margin_empirical,93.03,0.1722,1576,1694,3,1742
+CPLFW,margin_empirical_multi,93.15,0.1722,1578,1694,3,1742
