@@ -44,16 +44,17 @@ public sealed partial class MainWindow : Window
     private DateTime _lastProcessedAt = DateTime.MinValue;
     private static readonly TimeSpan MinProcessInterval = TimeSpan.FromMilliseconds(200);
 
-    // TODO: hiện đang hardcode để test — khi có UI chọn luồng thật (web
-    // form -> launch native kèm session_id + flowKind), thay bằng tham số
-    // truyền vào lúc khởi tạo MainWindow, không hardcode nữa.
-    private readonly FlowKind _flowKind = FlowKind.Enroll;
+    private readonly FlowKind _flowKind;
+    private readonly string? _sessionId;
 
     private static readonly string LocalTestEnrollDataPath =
         Path.Combine(AppContext.BaseDirectory, "local_test_enroll_data.json");
 
-    public MainWindow()
+    public MainWindow(FlowKind flowKind = FlowKind.Enroll, string? sessionId = null)
     {
+        _flowKind = flowKind;
+        _sessionId = sessionId;
+
         InitializeComponent();
         ResultText.Text = "Đang khởi tạo...";
         this.Closed += (_, _) => CleanupPipeline();
@@ -271,17 +272,14 @@ public sealed partial class MainWindow : Window
     private async Task RunEnrollAsync(List<float> embedding, string mMatrixPath, string gMatrixPath, string llrTablePath)
     {
         // TODO: user_secret/service_salt phải lấy từ POST /enroll/init
-        // {session_id} khi có server — dùng giá trị test tạm thời.
+        // {session_id} khi có server thật — dùng giá trị test tạm.
         var userSecret = Enumerable.Range(1, 20).ToList();
         var serviceSalt = Enumerable.Range(1, 8).ToList();
 
         var enrollRequest = new
         {
-            embedding,
-            user_secret = userSecret,
-            service_salt = serviceSalt,
-            m_matrix_path = mMatrixPath,
-            generator_matrix_g_path = gMatrixPath,
+            embedding, user_secret = userSecret, service_salt = serviceSalt,
+            m_matrix_path = mMatrixPath, generator_matrix_g_path = gMatrixPath,
             empirical_llr_table_path = llrTablePath
         };
 
@@ -294,30 +292,35 @@ public sealed partial class MainWindow : Window
             return;
         }
 
-        ResultText.Text = "Enroll thành công (cục bộ).\n" + resultJson;
-
-        // TODO: khi có FastAPI, thay khối này bằng POST /enroll/complete
+        // TODO: khi có FastAPI, thay bằng POST /enroll/complete
         // {session_id, helper_data, reliability_mask, key_hash, service_salt}.
         var testStorage = new
         {
-            user_secret = userSecret,
-            service_salt = serviceSalt,
+            user_secret = userSecret, service_salt = serviceSalt,
             helper_data = doc.RootElement.GetProperty("helper_data"),
             reliability_mask = doc.RootElement.GetProperty("reliability_mask")
         };
         await File.WriteAllTextAsync(LocalTestEnrollDataPath, JsonSerializer.Serialize(testStorage));
+
+        // Chỉ hiện 4 byte đầu key_hash — đủ để biết pipeline chạy ra dữ liệu
+        // thật (không phải lỗi im lặng), không in tràn toàn bộ dữ liệu.
+        byte[] keyHashPrefix = doc.RootElement.GetProperty("key_hash")
+            .EnumerateArray().Take(4).Select(e => (byte)e.GetInt32()).ToArray();
+        string debugInfo = $"key_hash: {BitConverter.ToString(keyHashPrefix)}...";
+
+        await ShowSuccessAndCloseAsync("Đăng ký thành công!", debugInfo);
     }
 
     private async Task RunVerifyAsync(List<float> embedding, string mMatrixPath, string gMatrixPath, string llrTablePath)
     {
         if (!File.Exists(LocalTestEnrollDataPath))
         {
-            ResultText.Text = "Chưa có dữ liệu enroll local để test verify — chạy Enroll trước.";
+            ResultText.Text = "Chưa có dữ liệu enroll local để test verify.";
             return;
         }
 
-        // TODO: thay khối đọc file này bằng POST /verify/challenge
-        // {username} lấy dữ liệu thật từ server.
+        // TODO: thay khối đọc file này bằng POST /verify/challenge {username}
+        // lấy dữ liệu thật từ server.
         string savedJson = await File.ReadAllTextAsync(LocalTestEnrollDataPath);
         using var savedDoc = JsonDocument.Parse(savedJson);
         var saved = savedDoc.RootElement;
@@ -329,13 +332,9 @@ public sealed partial class MainWindow : Window
 
         var verifyRequest = new
         {
-            embedding,
-            user_secret = userSecret,
-            helper_data = helperData,
-            reliability_mask = reliabilityMask,
-            service_salt = serviceSalt,
-            m_matrix_path = mMatrixPath,
-            generator_matrix_g_path = gMatrixPath,
+            embedding, user_secret = userSecret, helper_data = helperData,
+            reliability_mask = reliabilityMask, service_salt = serviceSalt,
+            m_matrix_path = mMatrixPath, generator_matrix_g_path = gMatrixPath,
             empirical_llr_table_path = llrTablePath
         };
 
@@ -348,9 +347,17 @@ public sealed partial class MainWindow : Window
             return;
         }
 
+        // TODO: hiện chỉ dừng ở llr — decode + so hash cuối cùng cần server
+        // thật (đã chuyển sang server theo thiết kế kiến trúc đã chốt).
         int llrCount = doc.RootElement.GetProperty("llr").GetArrayLength();
-        ResultText.Text = $"Verify OK (client) — llr có {llrCount} phần tử.\n" +
-            "Bước decode + so hash cuối cùng cần server (FastAPI).";
+        await ShowSuccessAndCloseAsync("Xác thực thành công!", $"llr: {llrCount} phần tử");
+    }
+
+    private async Task ShowSuccessAndCloseAsync(string message, string? debugInfo = null)
+    {
+        ResultText.Text = debugInfo != null ? $"{message}\n{debugInfo}" : message;
+        await Task.Delay(1500);
+        Application.Current.Exit();
     }
 
     private void CleanupPipeline()

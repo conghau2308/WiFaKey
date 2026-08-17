@@ -27,8 +27,15 @@
         <Grid Grid.Row="1">
             <MediaPlayerElement x:Name="PreviewPlayer" Stretch="UniformToFill"/>
             <ScrollViewer VerticalAlignment="Bottom">
-                <Border Background="#80000000" Padding="16">
-                    <TextBlock x:Name="ResultText" TextWrapping="Wrap" Foreground="White"/>
+                <Border Margin="16" CornerRadius="8" Padding="12">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#00000000" Offset="0.0"/>
+                            <GradientStop Color="#CC000000" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <TextBlock x:Name="ResultText" TextWrapping="Wrap"
+                               Foreground="White"/>
                 </Border>
             </ScrollViewer>
         </Grid>
