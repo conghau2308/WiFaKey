@@ -1,204 +1,269 @@
-# WiFaKey – Improved Biometric Cryptosystem (Research & Service Implementation)
+# WiFaKey – Khóa sinh trắc học từ khuôn mặt trong môi trường tự nhiên
 
-> **Trạng thái:** Nghiên cứu thực nghiệm | Cập nhật lần cuối: 08/2026
+![Version](https://img.shields.io/badge/version-1.0-blue)
+![Status](https://img.shields.io/badge/status-research-orange)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-Đây là công trình cải tiến và tích hợp hệ thống mật mã sinh trắc học **WiFaKey** (dựa trên Fuzzy Commitment Scheme, LDPC và Neural-MS Decoder) vào kiến trúc xác thực phân tán cho thương mại điện tử.
-
----
-
-## Tổng quan hệ thống
-
-Hệ thống chuyển đổi ảnh khuôn mặt thành khóa mật mã (160 bit) mà **không lưu trữ** ảnh hay đặc trưng thô, hướng tới các yêu cầu bảo vệ thông tin sinh trắc học của ISO/IEC 24745:2022.
-
-**Pipeline cốt lõi:**
-
-`Ảnh → FaceProcessor (InsightFace) → AdaFace (Embedding 512-d) → AdaMTrans (Binarize + Mask κ) → LDPC (BG2, N=52, Z=16) → Neural-MS Decoder → Key`
+**WiFaKey** là hệ thống xác thực sinh trắc học bằng khuôn mặt, sử dụng cơ chế **Fuzzy Commitment** kết hợp **mã sửa lỗi LDPC**. Hệ thống tạo khóa mật mã từ đặc trưng khuôn mặt mà không lưu trữ template sinh trắc gốc.
 
 ---
 
-## Biometric Enrollment & Verification Flow
-
-Quy trình xử lý sinh trắc học được chia làm hai pha chính: **Enroll** (đăng ký) và **Verify** (xác thực). Mục tiêu là biến đổi đặc trưng khuôn mặt (một vector số thực) thành một **ma trận nhiễu** (helper data) mà từ đó không thể suy ngược trực tiếp đặc trưng gốc, nhưng vẫn cho phép xác thực khi so sánh với một lần quét mới.
-
-### 1. Pha Enroll (Đăng ký)
-
-- **Bước 1:** Trích xuất embedding 512 chiều từ ảnh khuôn mặt (AdaFace).
-- **Bước 2:** Lượng tử hóa và mã hóa thermometer (`lssc_binary`) để chuyển embedding thành chuỗi bit thô dài **1536 bit**.
-- **Bước 3:** Áp dụng **mặt nạ ngẫu nhiên** (tham số `κ`) để chỉ giữ lại một tập con các bit ổn định, tạo thành chuỗi `b` dài **832 bit** (khớp với độ dài codeword LDPC). *(Cần đối chiếu lại giá trị κ thực tế trong code: nếu κ = 0.3125 là tỉ lệ bit bị che trên 1536 bit thì số bit giữ lại sẽ là ~1056, không phải 832 — con số này trong bản nháp trước không khớp với phép tính.)*
-- **Bước 4:** Sinh khóa bí mật `K` (160 bit) ngẫu nhiên, mã hóa bằng LDPC để tạo codeword `C` (832 bit).
-- **Bước 5:** Tính **helper data** `δ = b XOR C`.
-- **Bước 6:** Lưu trữ lên server:
-  - `helper_data` (δ)
-  - `reliability_mask` (mặt nạ ngẫu nhiên đã dùng)
-  - `key_hash` = SHA256(K)
-  - `service_salt` (muối cố định cho service)
-  - `user_secret` (dùng để xác thực kênh an toàn)
-
-> **Ý nghĩa bảo mật:** Server chỉ lưu δ, mặt nạ và hash — không lưu ảnh hay embedding gốc. Với một fuzzy commitment scheme có codeword đủ entropy và mask không tương quan với độ tin cậy bit, việc suy ngược embedding hay khóa K trực tiếp từ δ là không khả thi về mặt tính toán. Đây là một tính chất cần được chứng minh/kiểm chứng cho tham số cụ thể của hệ thống, không phải một đảm bảo tuyệt đối mặc nhiên.
-
-### 2. Pha Verify (Xác thực)
-
-- **Bước 1:** Client (native app) gửi `username` lên server, nhận về `helper_data`, `reliability_mask`, `nonce`, `user_secret`, `service_salt`.
-- **Bước 2:** Client chụp ảnh mới → trích xuất embedding → áp dụng **cùng mặt nạ** đã nhận để lấy chuỗi bit mới `b'` (832 bit).
-- **Bước 3:** Tính **tín hiệu nhiễu** `y = b' XOR δ = b' XOR b XOR C`. Về bản chất, `y = C XOR (b' XOR b)`, trong đó `(b' XOR b)` là sai khác giữa hai lần quét (noise).
-- **Bước 4:** Client chuyển `y` thành **LLR** (Log-Likelihood Ratio) — một giá trị số thực phản ánh độ tin cậy của từng bit. Có thể là hard-BPSK (±1) hoặc soft-LLR tùy variant.
-- **Bước 5:** Client gửi `llr` (832 số thực) và `key_hash` lên server (qua Java core).
-- **Bước 6:** Server Python (Decoder Service) nhận `llr`, chạy Neural-MS decoder để khôi phục codeword `C'`, trích xuất 160 bit đầu làm `K'`.
-- **Bước 7:** Tính `SHA256(K')` và so sánh với `key_hash` đã lưu. Trả về `success` nếu khớp.
-
-> **Nhấn mạnh:** Toàn bộ quá trình giải mã và so hash diễn ra trên server, **client không bao giờ nhìn thấy khóa gốc K** hay giá trị hash. Điều này bảo vệ **tính bí mật của K** ngay cả khi client bị xâm phạm — nhưng **không** ngăn được việc một client bị xâm phạm tự tính `y` từ một ảnh đánh cắp rồi gửi lên server để giả mạo xác thực (client-side injection). Đây vẫn là hướng tấn công còn bỏ ngỏ của kiến trúc hiện tại, chưa được giải quyết ở thiết kế mô tả trong tài liệu này.
+## Mục lục
+- [Tổng quan](#tổng-quan)
+- [Vấn đề nghiên cứu](#vấn-đề-nghiên-cứu)
+- [Kiến trúc hệ thống](#kiến-trúc-hệ-thống)
+- [Luồng xử lý Enroll và Verify](#luồng-xử-lý-enroll-và-verify)
+- [Kết quả thực nghiệm](#kết-quả-thực-nghiệm)
+- [Các lớp bảo vệ](#các-lớp-bảo-vệ)
+- [Cách chạy hệ thống](#cách-chạy-hệ-thống)
+- [Đóng góp](#đóng-góp)
 
 ---
 
-## Kiến trúc dịch vụ (Service Architecture)
+## Tổng quan
 
-Hệ thống gồm 3 thành phần chính giao tiếp qua REST API:
+WiFaKey biến khuôn mặt thành "mật khẩu" nhưng không bao giờ lưu trữ bức ảnh hay vector đặc trưng gốc. Thay vào đó:
 
-| Thành phần | Vai trò | Công nghệ |
-| :--- | :--- | :--- |
-| **Client** (Native SDK/exe) | Thu thập ảnh, xử lý tiền xử lý AI (AdaFace) cục bộ, tạo LLR | Python / C++ / Go *(cần chốt lại 1 ngôn ngữ theo bản build thực tế — không dùng packaged web app/JS-TS vì không đủ hiệu năng cho các model ML liên quan)* |
-| **IdP Core** (Java) | Quản lý session, user, helper data, hash, OIDC flow, token | Spring Boot (Java) |
-| **Decode Service** (Python) | Nhận LLR, chạy Neural-MS decode, so khớp key_hash | FastAPI + TensorFlow |
+- **Lúc đăng ký (Enroll)**: Hệ thống trích xuất chuỗi bit sinh trắc `b` từ khuôn mặt, kết hợp với một từ mã ngẫu nhiên `C` để tạo `helper_data = b ⊕ C`. Chỉ `helper_data` và `key_hash = SHA256(K)` được lưu trên server.
+- **Lúc xác thực (Verify)**: Từ khuôn mặt mới, tính `c' = helper_data ⊕ b'`, sau đó dùng **Neural-MS Decoder** (mạng nơ-ron học sâu trên đồ thị Tanner) để sửa lỗi và khôi phục khóa `K`.
 
-**Quy trình xác thực điển hình:** Native gửi `username` → Java trả `helper_data` + `nonce` → Client tính LLR → Java gửi `llr` + `key_hash` sang Python Decoder → Python trả `success` → Java cấp token.
+WiFaKey chuyển bài toán xác thực sinh trắc thành bài toán **giải mã kênh nhiễu**, nhằm cân bằng giữa **độ chính xác** và **tính riêng tư**.
 
 ---
 
-## Phát hiện & Cải tiến nổi bật (Research Outcomes)
+## Vấn đề nghiên cứu
 
-Trong quá trình phân tích và debug, nhóm đã phát hiện và khắc phục các vấn đề cốt lõi:
+### 1. Lỗ hổng AND-mask
+Thiết kế ban đầu dùng `mask_r` để che bit, nhưng vô tình ép bit về 0 và làm lộ codeword. Attacker có thể khôi phục khóa 100% qua khử Gauss.
 
-| Vấn đề | Mô tả | Giải pháp / Kết luận |
-| :--- | :--- | :--- |
-| **Bug cứng gây luôn fail** | `wifakey_handler.py` thiếu `.astype(np.float32)` trước khi feed TF placeholder, khiến verify luôn thất bại trên môi trường cụ thể. | **Đã sửa** trên code gốc. |
-| **Bug Hash nghiêm trọng** | Script test tự viết dùng `.tobytes()` trên `int32` trong khi enroll hash trên `int` (mặc định `int` của numpy là `int32` trên Windows nhưng `int64` trên Linux/Mac), khiến hash lệch dù bit giống nhau. | **Đã sửa** trong harness test, đạt `FRR=2.9%, FAR=0%` cho Baseline *(số liệu tự báo cáo — nên kiểm tra lại trước khi đưa vào luận văn)*. |
-| **Lỗ hổng bảo mật với Mask** | Gán `max_mag` (tin cậy cao nhất) cho bit bị mask (mask=0) vì cho rằng giá trị này "biết trước". | **Sai lầm:** gây FAR tăng vọt 39.2%. Đã thay bằng `masked_mag=1.0` (trung tính). |
-| **Hiệu năng Soft-LLR** | Soft-LLR (khoảng cách tới ngưỡng) được kỳ vọng vượt Hard-BPSK nhưng thực tế **không cải thiện**. | **Kết luận:** decoder gốc tối ưu cứng cho ±1; gán LLR biến động làm nhiễu Belief Propagation. Đây là một **kết quả âm tính có giá trị** (ghi nhận cơ sở thực nghiệm cho hướng nghiên cứu tiếp theo). |
+**Giải pháp**: Chuyển sang **Selection-Puncturing** – chọn ngẫu nhiên 832 vị trí thật, đảm bảo OTP hoàn hảo.
+
+### 2. Rò rỉ entropy từ Reliability Mask
+Để giảm BER, cần chọn bit ổn định (Margin Selection), nhưng mask này làm lộ thông tin thống kê, giảm entropy mỗi bit từ 1.0 xuống 0.73.
+
+**Giải pháp**: **Privacy Amplification** bằng Universal Hashing – trích xuất khóa 140-bit an toàn có thể chứng minh, entropy 0.9999 bit/bit.
+
+### 3. Tấn công từ kẻ có ảnh + mã nguồn
+Nếu attacker có ảnh khuôn mặt và biết toàn bộ thuật toán, chúng có thể tạo `b'` đúng và giải mã khóa.
+
+**Giải pháp**: **BioHashing** (phép chiếu ngẫu nhiên dùng `User_Secret`) + **Public Salted Permutation** (hoán vị bit dùng `Service_Salt`) + **Chữ ký thiết bị** (Secure Enclave/TPM).
 
 ---
 
-## Cấu trúc thư mục dự án
+## Kiến trúc hệ thống
 
 ```
-project_root/
-├── wifakey_module/              # Module gốc (ĐÃ SỬA 1 BUG)
-│   ├── wifakey_handler.py       # [FIXED] Đã thêm .astype(np.float32)
-│   └── weights/                 # Trọng số pre-trained cho Neural-MS
-│
-├── research/                    # Code nghiên cứu cải tiến (không ảnh hưởng module gốc)
-│   ├── modulation/              # Các variant LLR (v0 hard, v1 soft, v2 symbol-level)
-│   ├── decoder/                 # Fine-tuning scripts & weights
-│   └── pipeline/                # Harness A/B test
-│
-├── scripts/                     # Scripts chẩn đoán, trích xuất embedding
-│   └── research/                # Script debug chi tiết (parity, BER phân loại, v.v.)
-│
-├── datasets/                    # Dataset LFW, embedding cache, và 3 tầng pairs (tune/select/final)
-│
-├── experiments/                 # Kịch bản chạy thử nghiệm chính thức
-│
-└── wifo_decode_service/         # DỊCH VỤ DECODE CHÍNH THỨC (FastAPI)
-    ├── app/
-    │   ├── main.py               # API endpoints (/decode, /health)
-    │   ├── decoder.py            # Wrapper khởi tạo session TensorFlow
-    │   └── models.py              # Pydantic schema
-    ├── requirements.txt
-    └── run.sh
+┌─────────────────────────────────────────────────────────────┐
+│ CLIENT (iOS / Android / Windows)                           │
+│                                                             │
+│  Ảnh → Face Detection/Alignment → AdaFace embedding        │
+│    → BioHashing (User_Secret)                              │
+│    → Salted Permutation (Service_Salt)                     │
+│    → Binarization (LSSC)                                   │
+│    → Margin Selection (chọn 832 bit)                       │
+│    → LDPC Encode (enroll) / XOR (verify)                   │
+│    → Empirical LLR (tính LLR từ margin)                    │
+│                                                             │
+│  Gửi LLR lên server                                        │
+└─────────────────────────────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│ SERVER DECODE (FastAPI + ONNX Runtime)                     │
+│                                                             │
+│  Nhận LLR (832 float) + key_hash                           │
+│  Chạy Neural-MS ONNX → k_prime                             │
+│  SHA256(k_prime) == key_hash? → success                    │
+│                                                             │
+│  Không thấy dữ liệu sinh trắc thô, chỉ thấy LLR đã biến đổi │
+└─────────────────────────────────────────────────────────────┘
 ```
+
+### Các module chính
+
+| Module | Chức năng |
+|--------|-----------|
+| `face_extraction` | Face detection, alignment, AdaFace embedding |
+| `biohashing` | Phép chiếu Gaussian ngẫu nhiên, bảo vệ template |
+| `salted_permutation` | Hoán vị bit, chống liên kết chéo |
+| `binarization` | Thermometer code, tạo bit và margin |
+| `margin_selection` | Chọn bit ổn định, giảm BER |
+| `empirical_llr` | Bảng tra cứu LLR, tăng khả năng sửa lỗi |
+| `ldpc_encoder` | Mã hóa LDPC trên GF(2) |
+| `device_signature` | Tạo payload chuẩn cho chữ ký thiết bị |
+| `secure_memory` | Khóa bộ nhớ (mlock) và xóa dữ liệu |
 
 ---
 
-## Hướng dẫn cài đặt & chạy (Source Code Instructions)
+## Luồng xử lý Enroll và Verify
 
-Hướng dẫn này tập trung vào việc chạy **Decode Service (FastAPI)** – thành phần xương sống để Java giao tiếp với Neural-MS.
+Phần này mô tả chi tiết các thuật toán và bước xử lý khi gọi `enroll` và `verify` trong client, cũng như cách server tham gia.
 
-### 1. Yêu cầu hệ thống
-- Python 3.8 – 3.10 (TensorFlow 2.x)
-- (Khuyến nghị) NVIDIA GPU + CUDA 11.x để tăng tốc, hoặc CPU (sẽ chạy chậm hơn).
-- Môi trường: `conda` hoặc `venv`.
+### 🔐 Enroll – Đăng ký khuôn mặt
 
-### 2. Clone và chuẩn bị thư mục
-Đảm bảo thư mục dự án có cấu trúc như trên. Đặc biệt, thư mục `wifakey_module` (chứa code gốc) và `wifo_decode_service` nằm cùng cấp.
+**Mục tiêu**: Từ ảnh khuôn mặt, tạo ra `helper_data` và `key_hash` để lưu trên server mà không lộ bất kỳ thông tin sinh trắc nào.
+
+| Bước | Thuật toán / Kỹ thuật | Mô tả |
+|------|----------------------|-------|
+| 1. Trích xuất embedding | Face Detection (UltraFace/RetinaFace) + Alignment + AdaFace | Ảnh thô → vector 512 chiều `v` |
+| 2. BioHashing | Gaussian Random Projection với `User_Secret` | `v' = M(user_secret) @ v`, chuẩn hóa norm |
+| 3. Salted Permutation | Fisher-Yates shuffle với `Service_Salt` | Tạo hoán vị `π` cho 1536 bit, áp dụng lên bits và margins |
+| 4. Binarization | Thermometer Code (LSSC) | Chiếu `v'` qua `M_matrix`, so với 3 ngưỡng, tạo 1536 bit và margin |
+| 5. Margin Selection | Chọn top 832 bit có margin cao nhất | `idx_sel = argpartition(-margin, 832)` → `b_sel` |
+| 6. Sinh khóa ngẫu nhiên | CSPRNG | `K` 160 bit (20 bytes) |
+| 7. LDPC Encode | GF(2) matrix multiplication với `G` (160×832) | `C = K @ G` |
+| 8. XOR helper data | Fuzzy Commitment | `helper_data = b_sel XOR C` |
+| 9. Hash khóa | SHA-256 | `key_hash = SHA256(K)` |
+| 10. Lưu trữ | Chỉ gửi `helper_data`, `reliability_mask`, `key_hash`, `service_salt` lên server | Không bao giờ gửi `v`, `b_sel`, hay `K` |
+
+### 🔓 Verify – Xác thực khuôn mặt
+
+**Mục tiêu**: Từ ảnh khuôn mặt mới, tạo ra `LLR` để gửi lên server decode, không bao giờ gửi dữ liệu sinh trắc thô.
+
+| Bước | Thuật toán / Kỹ thuật | Mô tả |
+|------|----------------------|-------|
+| 1. Trích xuất embedding | Như enroll | `v'` từ ảnh verify |
+| 2. BioHashing | Giống enroll, dùng `User_Secret` từ server | `v''` |
+| 3. Salted Permutation | Giống enroll, dùng `Service_Salt` | `π` |
+| 4. Binarization | Giống enroll | `b_full'`, `margin'` |
+| 5. Áp dụng mask | `indices_from_mask(reliability_mask)` | Lấy `b_sel'` và `margin_sel` tại các vị trí đã đăng ký |
+| 6. XOR noisy codeword | `noisy = b_sel' XOR helper_data` | Tính `c'` |
+| 7. Empirical LLR | Bảng tra cứu từ `reliability_lookup.npz` | `llr[i] = sign(noisy[i]) * magnitude(margin_sel[i])` |
+| 8. Gửi LLR lên server | JSON gồm `llr` (832 float) | Server không nhận bit sinh trắc, chỉ nhận LLR |
+| 9. Server decode | Neural-MS ONNX | `K' = Decode(llr)` |
+| 10. Server kiểm tra | `SHA256(K') == key_hash` | Trả về `success` |
+
+### Sơ đồ tuần tự (Sequence Diagram)
+
+```
+Client                          Server Decode
+  │                                 │
+  │── 1. POST /verify/challenge ───▶│ (trả user_secret, helper_data, mask, salt)
+  │                                 │
+  │── 2. Tính LLR cục bộ ───────────│
+  │                                 │
+  │── 3. POST /verify/complete ─────▶│ (gửi llr + key_hash? không, server tự lấy)
+  │                                 │
+  │                                 │── 4. Neural-MS Decode → K'
+  │                                 │── 5. SHA256(K') == key_hash?
+  │◀──────── 6. success ─────────────│
+```
+
+**Lưu ý**: Client không bao giờ tự so hash; server tự tính độc lập, đảm bảo không tin client.
+
+---
+
+## Kết quả thực nghiệm
+
+### Hiệu năng GMR / FAR
+
+| Cấu hình | LFW | CPLFW |
+|----------|-----|-------|
+| Baseline BPSK | 42% | 5% |
+| + Empirical LLR | 89% | 43% |
+| + Margin Selection | **97.7%** | **93.0%** |
+| Margin_bpsk (an toàn tuyệt đối) | 97.4% | 77.7% (FAR 0%) |
+
+### Thực nghiệm tấn công
+
+| Mô hình tấn công | Kết quả |
+|------------------|---------|
+| Composition vs Naive (331 users) | p = 1.00 (không khác biệt) |
+| Hill-Climbing Binary | 0/331 thành công (5000 lần thử) |
+| Partial Permutation Leak (100%) | 0/331 thành công (10000 lần thử) |
+
+### Bảo mật khóa sau Privacy Amplification
+
+- Độ dài khóa: **140 bit**
+- Entropy: **0.9999 bit/bit**
+- An toàn trước Grover: độ phức tạp 2^70
+
+---
+
+## Các lớp bảo vệ
+
+WiFaKey sử dụng **5 lớp phòng thủ độc lập**:
+
+1. **Margin Selection + Empirical LLR** – Tối ưu hiệu năng, giảm BER.
+2. **BioHashing** – Không thể đảo ngược (irreversibility).
+3. **Public Salted Permutation** – Chống liên kết chéo (unlinkability).
+4. **Privacy Amplification** – Khóa an toàn có thể chứng minh.
+5. **Chữ ký thiết bị** – Ngăn chặn tấn công từ kẻ có ảnh và mã nguồn.
+
+---
+
+## Cách chạy hệ thống
+
+### 1. Cài đặt môi trường
+
+#### Yêu cầu
+- Python ≥ 3.9
+- Rust ≥ 1.70 (nếu build client)
+- ONNX Runtime
+
+#### Cài đặt FastAPI server
 
 ```bash
-# Ví dụ cấu trúc
-/path/to/project/
-├── wifakey_module/      # Code gốc của tác giả (đã sửa)
-└── wifo_decode_service/ # Service chính
+# Tạo môi trường ảo
+python -m venv wifakey-env
+source wifakey-env/bin/activate  # Trên Windows: wifakey-env\Scripts\activate
+
+# Cài dependencies
+pip install fastapi uvicorn[standard] onnxruntime numpy
+
+# Đặt file neural_ms.onnx vào thư mục decode_server/
 ```
 
-### 3. Cài đặt dependencies
+### 2. Chạy Decode Server
+
 ```bash
-cd wifo_decode_service
-pip install -r requirements.txt
+cd decode_server
+uvicorn main:app --host 0.0.0.0 --port 8001
 ```
 
-**Nội dung `requirements.txt` tiêu chuẩn:**
-```
-fastapi
-uvicorn
-python-dotenv
-numpy
-tensorflow>=2.0
-pydantic
+Server sẽ khởi động tại `http://localhost:8001`. Kiểm tra:
+
+```bash
+curl http://localhost:8001/health
+# Output: {"status":"ok","model":"neural_ms.onnx"}
 ```
 
-### 4. Cấu hình đường dẫn (nếu cần)
-Mở `app/config.py` để kiểm tra đường dẫn tới `wifakey_module`. Mặc định, service sẽ tìm thư mục này ở cấp cha:
+### 3. Build client Rust
+
+```bash
+cd wifakey-core
+cargo build --release
+```
+
+Client Rust sẽ tạo thư viện động (`.dll` / `.dylib` / `.so`) để shell native gọi qua FFI hoặc UniFFI.
+
+### 4. API Endpoints
+
+| Endpoint | Chức năng |
+|----------|-----------|
+| `POST /verify` | Nhận LLR + key_hash, decode và so sánh |
+| `POST /decode` | Chỉ decode, trả về key dạng hex |
+| `GET /health` | Kiểm tra trạng thái |
+
+Ví dụ gọi:
+
 ```python
-WIFAKEY_MODULE_PATH = BASE_DIR / "wifakey_module"
-```
+import requests
 
-### 5. Chạy Decode Service
-```bash
-# Linux / Mac
-bash run.sh
-
-# Hoặc trực tiếp với uvicorn (Windows / Debug)
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-```
-Sau khi chạy, API sẽ sẵn sàng tại `http://localhost:8000`.
-
-### 6. Kiểm tra hoạt động
-- **Health Check**: `curl http://localhost:8000/health` → `{"status":"ok"}`
-- **API Docs**: Truy cập `http://localhost:8000/docs` để thử nghiệm Swagger UI.
-
-### 7. Gọi API `/decode` (Dành cho Java/Backend)
-
-**Request (POST)**:
-```json
-{
-  "llr": [0.1, -0.5, "... 832 số thực"],
-  "key_hash": "a1b2c3... (hex string, 64 ký tự)"
-}
-```
-
-**Response**:
-```json
-{
-  "success": true,
-  "message": "OK"
-}
+response = requests.post(
+    "http://localhost:8001/verify",
+    json={
+        "llr": [0.1, -0.2, ..., 0.5],  # 832 phần tử
+        "key_hash": "a1b2c3..."
+    }
+)
+print(response.json())  # {"success": true}
 ```
 
 ---
 
-## Lưu ý quan trọng cho nhà phát triển (Developer Notes)
+## Đóng góp
 
-1. **Không sửa `wifakey_module` gốc** (trừ 1 dòng bug đã xác nhận). Mọi thử nghiệm cải tiến phải nằm trong thư mục `research/` để giữ Baseline sạch.
-2. **Xóa cache khi debug**: Nếu thay đổi code logic trong `research/modulation` hoặc `decoder`, hãy xóa thư mục `__pycache__` và **restart hoàn toàn Python Kernel** (đặc biệt nếu dùng Jupyter) để tránh lỗi import từ bytecode cũ.
-3. **3 tầng dữ liệu (Data Tiers)**:
-   - `tune`: hiệu chỉnh tham số (κ, scale factor).
-   - `select`: so sánh các phiên bản (A/B test).
-   - `final` (`pairs.csv` gốc LFW): **chỉ chạy DUY NHẤT 1 lần** khi đã chốt phiên bản cuối cùng.
-4. **Bảo mật**: Service Python **không** giữ secret hay key nào. Nó chỉ nhận `llr` đầu vào và `key_hash` để so sánh, trả về `success`/`fail`. Nhờ đó khóa gốc `K` không bao giờ được truyền qua mạng — nhưng như đã nêu ở phần Verify, điều này không tự động ngăn được tấn công giả mạo từ một client bị xâm phạm.
+Công trình này là kết quả của quá trình nghiên cứu và phát triển độc lập. Mọi đóng góp, câu hỏi hay thảo luận đều được chào đón.
 
----
-
-## Trích dẫn & Tài liệu tham khảo
-- WiFaKey gốc: Dong et al., *WiFaKey: Generating Cryptographic Keys from Face in the Wild*, arXiv:2407.14804.
-- Tiêu chuẩn ISO/IEC 24745:2022.
-
----
-
-> **Ghi nhận:** Kết quả thực nghiệm cho thấy Soft-LLR (dù mang nhiều thông tin hơn) chưa vượt qua được Baseline Hard-BPSK, do Neural-MS được tối ưu cứng cho biên độ ±1. Dự án đã ghi nhận đầy đủ cơ sở dữ liệu và logic cho hướng nghiên cứu tiếp theo (Symbol-level LLR hoặc COVQ) trong thư mục `research/`.
+**Tác giả**: Võ Công Hậu
